@@ -1,3 +1,7 @@
+/**  
+ *  Copyright (C) 2015 dl@zidoo.tv
+ */
+
 package org.sscraper.model;
 
 import org.sscraper.Status;
@@ -32,5 +36,7 @@ public class SearchResult {
     private Double getVoteAverage() { return this.voteAverage; }
     
     public Long   getVoteCount() { return  this.voteCount; }   
+    
+    public  int parseJason(String jsonString) { return Status.OK; }
  }
     

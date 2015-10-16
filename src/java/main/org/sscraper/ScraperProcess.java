@@ -1,3 +1,7 @@
+/**  
+ *  Copyright (C) 2015 dl@zidoo.tv
+ */
+
 package org.sscraper;
 
 import java.util.ArrayList;

@@ -1,3 +1,6 @@
+/**  
+ *  Copyright (C) 2015 dl@zidoo.tv
+ */
 package org.sscraper.model.tmdb;
 
 import org.sscraper.Status;

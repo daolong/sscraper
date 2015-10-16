@@ -1,3 +1,7 @@
+/**  
+ *  Copyright (C) 2015 dl@zidoo.tv
+ */
+
 package org.sscraper.scraper;
 
 import org.sscraper.model.MovieInfo;
