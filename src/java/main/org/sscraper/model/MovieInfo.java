@@ -10,7 +10,8 @@ public class MovieInfo {
 
     private Long zmdbId; // zidoo movie data base id
     
-    private String searchTitle; // original search string from client
+    private String originalSearchTitle; // original search string from client
+    private String searchTitle;         // search title process by guess
     
     private String title;       // title from internet
     private String otherTitle;  // alias if exist
@@ -35,6 +36,7 @@ public class MovieInfo {
     public MovieInfo(String searchTitle) {
         this.searchTitle = searchTitle;
         
+        zmdbId = -1L; // meaning not add to data base
         directors = new ArrayList<String>();
         actors = new ArrayList<Actor>();
         scriptWriters = new ArrayList<String>();
@@ -50,6 +52,13 @@ public class MovieInfo {
         return this.zmdbId;
     }
     
+    public void setOriginalSearchTitle(String originalSearchTitle) { this.originalSearchTitle = originalSearchTitle; }
+    
+    public String getOriginalSearChTitle() { return this.originalSearchTitle; }
+    
+    public void setSearchTitle(String searchTitle) { this.searchTitle = searchTitle; }
+    
+    public String getSearChTitle() { return this.searchTitle; }
     
     public void setTitle(String title) {
         this.title = title;        
@@ -98,6 +107,10 @@ public class MovieInfo {
     public String getOverView() {
         return this.overView;
     }
+    
+    public void setVoteAverage(Double voteAverage) { this.voteAverage = voteAverage; }
+    
+    public Double getVoteAverage() { return this.voteAverage; }
     
     public void addDirector(String director) {
         this.directors.add(director);

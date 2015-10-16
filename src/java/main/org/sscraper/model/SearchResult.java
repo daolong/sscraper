@@ -19,21 +19,21 @@ public class SearchResult {
     protected Long   voteCount;
     
     
-    private Long getId() { return this.id; }
+    public Long getId() { return this.id; }
     
-    private String getTitle() {return this.title; }
+    public String getTitle() {return this.title; }
     
-    private String getOriginalTitle() {return this.originalTitle; }
+    public String getOriginalTitle() {return this.originalTitle; }
     
-    private String getOriginalLanguage() {return this.originalLanguage; }
+    public String getOriginalLanguage() {return this.originalLanguage; }
     
-    private String getOverView() { return this.overView; }
+    public String getOverView() { return this.overView; }
     
-    private String getReleaseDate() { return this.releaseDate; } 
+    public String getReleaseDate() { return this.releaseDate; } 
     
-    private String getPosterPath() { return this.posterPath; }
+    public String getPosterPath() { return this.posterPath; }
     
-    private Double getVoteAverage() { return this.voteAverage; }
+    public Double getVoteAverage() { return this.voteAverage; }
     
     public Long   getVoteCount() { return  this.voteCount; }   
     

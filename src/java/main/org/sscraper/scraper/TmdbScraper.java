@@ -3,7 +3,11 @@
  */
 package org.sscraper.scraper;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.sscraper.Status;
+import org.sscraper.model.Actor;
 import org.sscraper.model.MovieInfo;
 import org.sscraper.model.SearchResult;
 import org.sscraper.model.tmdb.Casts;
@@ -28,6 +32,53 @@ public class TmdbScraper extends ScraperBase {
         if (search == null)
             return null;
         
+        MovieInfo info = new MovieInfo(name);
+        info.setTitle(search.getTitle());
+        info.setOtherTitle(search.getOriginalTitle());
+        info.setReleaseDate(search.getReleaseDate());
+        info.setDuration(0L);
+        info.setLanguage(search.getOriginalLanguage());
+        info.setOverView(search.getOverView());
+        info.setVoteAverage(search.getVoteAverage());
+        
+        // get casts, director, script writer ...
+        Casts cast = getCasts(search.getId());
+        if (cast != null) {
+            ArrayList<Casts.Cast> casts = cast.getCasts();
+            if (casts != null && casts.size() > 0) {
+                for (int i = 0; i < casts.size(); i++) {
+                    Actor actor = new Actor(casts.get(i).getName(), casts.get(i).getCharacter());
+                    info.addActor(actor);
+                }
+            }
+            
+            ArrayList<Casts.Crew> crews = cast.getCrews();
+            if (crews != null && crews.size() > 0) {
+                for (int i = 0; i < crews.size(); i++) {
+                    if (crews.get(i).getJob() == "Director") {
+                        info.addDirector(crews.get(i).getName());
+                    }
+                }
+            }
+        }
+        
+        // get poster image url
+        TmdbConfig config = getConfig();        
+        if (config != null) {
+            String base_url = config.getImages().getBase_url();
+            if (base_url != null) {
+                String url;
+                if (config.getImages().getPoster_sizes().size() > 0) {   
+                    int last = config.getImages().getPoster_sizes().size() - 1;
+                    url = base_url + config.getImages().getPoster_sizes().get(last) + "/" + search.getPosterPath();         
+                } else {
+                    url = base_url + "original/" + search.getPosterPath();
+                }
+                info.setPostorImageUrl(url);
+            }            
+        } 
+        
+        info.setSource(NAME);
         
         return null;
     }
@@ -58,7 +109,14 @@ public class TmdbScraper extends ScraperBase {
      * @return
      */
     private Casts getCasts(Long id) {
-        
+        String url = INFO_URL + id + "/casts?api_key=" + API_KEY + "&language=zh"; 
+        String response = HttpUtils.httpGet(url);
+        if (response != null) {
+            Casts casts = new Casts();
+            if (casts.parseJson(response) == Status.OK) {
+                return casts;
+            }
+        }
         
         return null;
     }
