@@ -1,0 +1,20 @@
+
+http://127.0.0.1:8085
+
+http://192.168.1.127:8085/search/movie?api_key=57983e31fb435df4df77afb854740ea9&query=夏洛特烦恼&year=2015
+
+
+
+client: firefox 
+http://127.0.0.1:8085/search/movie?api_key=57983e31fb435df4df77afb854740ea9&query=夏洛特烦恼&year=2015
+
+server:
+ GET /search/movie?api_key=57983e31fb435df4df77afb854740ea9&query=%E5%A4%8F%E6%B4%9B%E7%89%B9%E7%83%A6%E6%81%BC&year=2015 HTTP/1.1
+Host: 127.0.0.1:8085
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:40.0) Gecko/20100101 Firefox/40.0
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8
+Accept-Language: zh-CN,zh;q=0.8,en-US;q=0.5,en;q=0.3
+Accept-Encoding: gzip, deflate
+Connection: keep-alive
+
+http://127.0.0.1:8085/command/quit?

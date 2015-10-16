@@ -1,0 +1,109 @@
+
+
+1. http://api.tmdb.org/3/search/movie?api_key=57983e31fb435df4df77afb854740ea9&query=夏洛特烦恼&year=2015&language=zh
+
+
+=> 
+{"page":1,"results":
+[{"adult":false,"backdrop_path":"/lurZ6PAlfZYGSanrI6V9P7UcCLY.jpg","genre_ids":[10749,35],"id":362682,"original_language":"zh",
+"original_title":"夏洛特烦恼","overview":"　　昔日校花秋雅（王智 饰）的婚礼正在隆重举行，
+学生时代暗恋秋雅的夏洛（沈腾 饰）看着周围事业成功的老同学，心中泛起酸味，借着七分醉意大闹婚礼现场，甚至惹得妻子马冬梅（马丽 饰）现场发飙，
+而他发泄过后却在马桶上睡着了。梦里他重回校园，追求到他心爱的女孩、让失望的母亲重展笑颜、甚至成为无所不能的流行乐坛巨星……  　　
+醉生梦死中，他发现身边人都在利用自己，只有马冬梅是最值得珍惜的……",
+"release_date":"2015-09-30","poster_path":"/e5anoE2AUPXGLOh2r1MPirECegq.jpg",
+"popularity":1.377389,"title":"夏洛特烦恼","video":false,"vote_average":7.5,"vote_count":4}
+],
+"total_pages":1,"total_results":1}
+
+
+no result:
+{"page":1,"results":[],"total_pages":1,"total_results":0}
+
+2. http://api.tmdb.org/3/movie/362682?api_key=57983e31fb435df4df77afb854740ea9&language=zh
+
+==>
+{"adult":false,"backdrop_path":"/lurZ6PAlfZYGSanrI6V9P7UcCLY.jpg","belongs_to_collection":null,"budget":0,"genres":[{"id":10749,"name":"爱情"},
+{"id":35,"name":"喜剧"}],"homepage":"","id":362682,"imdb_id":"tt5061814","original_language":"zh","original_title":"夏洛特烦恼","overview":"　　昔日校花秋雅（王智 饰）的婚礼正在隆重举行，
+学生时代暗恋秋雅的夏洛（沈腾 饰）看着周围事业成功的老同学，心中泛起酸味，借着七分醉意大闹婚礼现场，甚至惹得妻子马冬梅（马丽 饰）现场发飙，
+而他发泄过后却在马桶上睡着了。梦里他重回校园，追求到他心爱的女孩、让失望的母亲重展笑颜、甚至成为无所不能的流行乐坛巨星……  　　
+醉生梦死中，他发现身边人都在利用自己，只有马冬梅是最值得珍惜的……"
+,"popularity":0.377389,"poster_path":"/e5anoE2AUPXGLOh2r1MPirECegq.jpg",
+"production_companies":[{"name":"Beijing Mahua Funage Company","id":64858}],
+"production_countries":[{"iso_3166_1":"CN","name":"China"}],"release_date":"2015-09-30","revenue":0,"runtime":104,
+"spoken_languages":[{"iso_639_1":"zh","name":"普通话"}],
+"status":"Released","tagline":"","title":"夏洛特烦恼","video":false,"vote_average":7.5,"vote_count":4}
+
+
+3. http://api.tmdb.org/3/movie/362682/casts?api_key=57983e31fb435df4df77afb854740ea9&language=zh
+
+
+==>
+{"id":362682,"cast":[
+{"cast_id":2,"character":"Xia Luo","credit_id":"561297309251416b5600169d","id":1519026,"name":"Teng Shen","order":1,"profile_path":null},
+{"cast_id":3,"character":"Ma Dong Mei","credit_id":"561297469251414feb00b8e1","id":1519027,"name":"Mary","order":2,"profile_path":null},
+{"cast_id":4,"character":"Qiuya","credit_id":"561297bbc3a368681f013fd4","id":1519029,"name":"Zixuan Wang","order":3,"profile_path":null},
+{"cast_id":5,"character":"","credit_id":"561297dbc3a3686810015c79","id":1519030,"name":"Zheng Yin","order":4,"profile_path":null},
+{"cast_id":6,"character":"","credit_id":"561297f5925141478d00bee8","id":1519031,"name":"Lun Ai","order":5,"profile_path":null}
+],
+"crew":[
+{"credit_id":"561296dac3a368681f013fbc","department":"Directing","id":1519023,"job":"Director","name":"Fei Yan","profile_path":null},
+{"credit_id":"561296fcc3a3686810015c57","department":"Directing","id":1519024,"job":"Director","name":"Damo Peng","profile_path":null}]}
+
+4.  http://api.tmdb.org/3/movie/362682/releases?api_key=57983e31fb435df4df77afb854740ea9&language=zh
+
+==>
+{"id":362682,"countries":[{"certification":"","iso_3166_1":"CN","primary":true,"release_date":"2015-09-30"},{"certification":"","iso_3166_1":"CA","primary":false,"release_date":"2015-10-09"}]}
+
+
+5.  http://api.tmdb.org/3/configuration?api_key=57983e31fb435df4df77afb854740ea9
+
+==>
+{"images":{"base_url":"http://image.tmdb.org/t/p/","secure_base_url":"https://image.tmdb.org/t/p/","backdrop_sizes":["w300","w780","w1280","original"],
+"logo_sizes":["w45","w92","w154","w185","w300","w500","original"],"poster_sizes":["w92","w154","w185","w342","w500","w780","original"],
+"profile_sizes":["w45","w185","h632","original"],"still_sizes":["w92","w185","w300","original"]},"change_keys":["adult","air_date","also_known_as",
+"alternative_titles","biography","birthday","budget","cast","certifications","character_names","created_by","crew","deathday","episode","episode_number",
+"episode_run_time","freebase_id","freebase_mid","general","genres","guest_stars","homepage","images","imdb_id","languages","name","network","origin_country",
+"original_name","original_title","overview","parts","place_of_birth","plot_keywords","production_code","production_companies","production_countries",
+"releases","revenue","runtime","season","season_number","season_regular","spoken_languages","status","tagline","title","translations","tvdb_id","tvrage_id",
+"type","video","videos"]}
+
+
+6. http://api.tmdb.org/3/movie/362682/images?api_key=57983e31fb435df4df77afb854740ea9&language=zh
+
+==>
+{"id":362682,"backdrops":[],"posters":[]}
+
+http://api.tmdb.org/3/movie/362682/images?api_key=57983e31fb435df4df77afb854740ea9
+
+==>
+{"id":362682,"backdrops":[
+{"aspect_ratio":1.77777777777778,"file_path":"/lurZ6PAlfZYGSanrI6V9P7UcCLY.jpg","height":720,"iso_639_1":null,"vote_average":0.0,"vote_count":0,"width":1280},
+{"aspect_ratio":1.77777777777778,"file_path":"/tMcUyZVI1xdyfpy41rkWmW0EDbc.jpg","height":720,"iso_639_1":null,"vote_average":0.0,"vote_count":0,"width":1280},
+{"aspect_ratio":1.77777777777778,"file_path":"/gh2xcGeWLQfA6Mf8UA85tiVOe1J.jpg","height":720,"iso_639_1":null,"vote_average":0.0,"vote_count":0,"width":1280}
+],
+"posters":[
+{"aspect_ratio":0.698080279232112,"file_path":"/e5anoE2AUPXGLOh2r1MPirECegq.jpg","height":1146,"iso_639_1":null,"vote_average":0.0,"vote_count":0,"width":800},
+{"aspect_ratio":0.698080279232112,"file_path":"/aeTG4LCOGdsxY8AaFXr7WPU4ARd.jpg","height":1146,"iso_639_1":null,"vote_average":0.0,"vote_count":0,"width":800},
+{"aspect_ratio":0.714285714285714,"file_path":"/62iqHbduVfzu8Hsjaevwk6xEFtj.jpg","height":1400,"iso_639_1":null,"vote_average":0.0,"vote_count":0,"width":1000}
+]}
+
+
+7. http://api.tmdb.org/3/movie/362682/trailers?api_key=57983e31fb435df4df77afb854740ea9&language=zh
+
+==>
+{"id":362682,"quicktime":[],"youtube":[]}
+
+
+============================================================
+poster_image:
+"w92","w154","w185","w342","w500","w780","original"
+
+http://image.tmdb.org/t/p/original/e5anoE2AUPXGLOh2r1MPirECegq.jpg
+
+http://image.tmdb.org/t/p/w92/e5anoE2AUPXGLOh2r1MPirECegq.jpg
+
+http://image.tmdb.org/t/p/w780/e5anoE2AUPXGLOh2r1MPirECegq.jpg
+
+
+
+
