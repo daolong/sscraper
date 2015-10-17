@@ -3,6 +3,8 @@
  */
 package org.sscraper.network;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.util.List;
 
 import org.apache.http.HttpEntity;
@@ -23,9 +25,11 @@ public class HttpUtils {
     private final static String TAG = "HttpUtils";
     
     // Connect Timeout
-    public final static int CONNECT_TIMEOUT = 40 * 1000;
+    public final static int CONNECT_TIMEOUT = 10 * 1000;
     // Read Timeout
-    public final static int READ_TIMEOUT = 40 * 1000;
+    public final static int READ_TIMEOUT = 10 * 1000;
+    
+    private static final String USER_AGENT = "Mozilla/5.0";
     
     @SuppressWarnings("deprecation")
     public static String httpGet(String urlString, int connectTimeout,
@@ -33,11 +37,13 @@ public class HttpUtils {
         
         Log.d(TAG, "HttpGet url : " + urlString);
         try {
-            DefaultHttpClient client = new DefaultHttpClient();
+            DefaultHttpClient client = new DefaultHttpClient();            
+            
             client.getParams().setParameter(
                     CoreConnectionPNames.CONNECTION_TIMEOUT, connectTimeout);
             client.getParams().setParameter(CoreConnectionPNames.SO_TIMEOUT,
                     readTimeout);
+            
             HttpGet httpRequest = new HttpGet(urlString);
             HttpResponse response = client.execute(httpRequest);
             HttpEntity entity = response.getEntity();
@@ -47,7 +53,7 @@ public class HttpUtils {
                 return rev;
             }
         } catch (Exception e1) {
-            e1.printStackTrace();
+            Log.printStackTrace(e1);
         }
         
         return null;
@@ -94,5 +100,14 @@ public class HttpUtils {
     
     public static String httpPost(String urlString, List<NameValuePair> params) {
         return httpPost(urlString, params, CONNECT_TIMEOUT, READ_TIMEOUT);
+    }
+    
+    public static String decodeHttpParam(String param, String charset) {
+        try {
+            String newParam = URLDecoder.decode(param, charset);
+            return newParam;
+        } catch (UnsupportedEncodingException e) {
+            return param;
+        }
     }
 }

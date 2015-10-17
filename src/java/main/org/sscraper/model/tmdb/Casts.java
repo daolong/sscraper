@@ -74,7 +74,7 @@ public class Casts {
         for (int i = 0; i < jcast.size(); i++) {
             Cast cast = new Cast();
             cast.setCharacter(jcast.getJSONObject(i).getString("character"));
-            cast.setCharacter(jcast.getJSONObject(i).getString("name"));
+            cast.setName(jcast.getJSONObject(i).getString("name"));
             
             mCasts.add(cast);
         }

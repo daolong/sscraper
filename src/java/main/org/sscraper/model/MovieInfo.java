@@ -149,10 +149,10 @@ public class MovieInfo {
         return this.source;
     }
     
-    public String toJasonString() {
+    public String toJsonString() {
         String json = "{\"id\":" + this.zmdbId + ", \"title\":\"" + this.title + "\", \"other_title\":\"" + this.otherTitle + "\", \"release_date\":\"" + 
                 this.releaseDate + "\", \"duration\":" + this.duration + ", \"original_language\":\"" + this.language + "\", \"poster_name\":" + 
-                this.postorImageName + "\", \"poster_url\":" + this.postorImageUrl  + "\",";  
+                this.postorImageName + "\", \"poster_url\":\"" + this.postorImageUrl  + "\",\"overview\":\"" + this.overView + "\", ";  
         
         json += "\"directors\":[";
         int i = 0;

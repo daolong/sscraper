@@ -9,6 +9,7 @@ import org.sscraper.utils.Log;
 
 import java.nio.ByteBuffer;
 
+import org.apache.http.HttpResponse;
 import org.httpkit.*;
 import org.httpkit.server.HttpServer;
 import org.httpkit.server.AsyncChannel;
@@ -23,15 +24,19 @@ import java.util.concurrent.Executors;
 
 import static org.httpkit.HttpUtils.HttpEncode;
 
-class MultiThreadHandler implements IHandler {
-    private static final String TAG = "MultiThreadHandler";
-    public static final String body = "Hello, This is video information scraper server from Zidoo (zidoo.tv).";
+import net.sf.json.JSONArray;
+import net.sf.json.JSONObject;
+
+class ServerHandler implements IHandler {
+    private static final String TAG = "ServerHandler";
+    public static final String body = "Hello!\nThis is a video information scraper server. \n\nCopyright (C) 2015 Zidoo(zidoo.tv).";
+    public static final String quit_response = "Bye bye!";
     
     private final static String VALID_KEY = "57983e31fb435df4df77afb854740ea9";
     
     private ExecutorService exec;
     
-    public MultiThreadHandler() {
+    public ServerHandler() {
         int core = 6; // Runtime.getRuntime().availableProcessors();
         exec = Executors.newFixedThreadPool(core);
     }
@@ -47,11 +52,17 @@ class MultiThreadHandler implements IHandler {
                 if (request.uri.equals("/command/quit")) {
                     // for test now
                     Log.d(TAG, "quit command");
+                    HeaderMap map = new HeaderMap();
+                    ByteBuffer[] bytes = HttpEncode(200, map, quit_response);
+                    cb.run(bytes);
                     cb.requetStop();
                 } else if (request.uri.equals("/search/movie")) {
                     String response = processQuery(request.queryString);
+                    Log.d(TAG, "response to client : " + response);
                     HeaderMap map = new HeaderMap();
-                    map.put("Connection", "Keep-Alive");
+                    //map.put("Connection", "Keep-Alive");
+                    map.put("Content-Type", "text/json");
+                    map.put("content-encoding", "UTF-8");
                     ByteBuffer[] bytes = HttpEncode(200, map, response);
                     cb.run(bytes);
                 }
@@ -94,7 +105,7 @@ class MultiThreadHandler implements IHandler {
         String api_key = paramMap.get("api_key");
         if ( api_key == null || !api_key.equals(VALID_KEY) ) {
             Log.d(TAG, "key[" + api_key + "] is not valid");
-            return (new Response(Status.AUTH_FAIL).toJasonString());
+            return (new Response(Status.AUTH_FAIL).toJsonString());
         }
         
         if (paramMap.get("query") != null) {
@@ -102,7 +113,7 @@ class MultiThreadHandler implements IHandler {
         }
         
         
-        return (new Response(Status.NOT_FOUND).toJasonString());
+        return (new Response(Status.NOT_FOUND).toJsonString());
     }
     
 }
@@ -112,11 +123,9 @@ public class Launcher {
     private final static int port = 8085;
     
     public static void main(String[] args) throws IOException {
-        
-        HttpServer server = new HttpServer("0.0.0.0", port, new MultiThreadHandler(), 20480,
+        HttpServer server = new HttpServer("0.0.0.0", port, new ServerHandler(), 20480,
                 2048, 1024 * 1024 * 4);
         server.start();
-        
         Log.d(TAG, "Server run on " + port);        
     }
 }

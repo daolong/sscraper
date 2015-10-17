@@ -37,6 +37,6 @@ public class SearchResult {
     
     public Long   getVoteCount() { return  this.voteCount; }   
     
-    public  int parseJason(String jsonString) { return Status.OK; }
+    public  int parseJson(String jsonString) { return Status.OK; }
  }
     

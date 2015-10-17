@@ -3,16 +3,30 @@
  */
 package org.sscraper.model.tmdb;
 
+import java.io.UnsupportedEncodingException;
+
 import org.sscraper.Status;
 import org.sscraper.model.SearchResult;
+import org.sscraper.utils.Log;
 
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 
 public class TmdbSearchResult extends SearchResult {
     
-    public  int parseJason(String jsonString) {
-        JSONObject jb = JSONObject.fromObject(jsonString);
+    public  int parseJson(String jsonString) {
+        Log.d("TmdbSearchResult", "parseJson : "  + jsonString);
+        
+        JSONObject jb = null;
+        try {
+            jb = JSONObject.fromObject(jsonString);
+        } catch (Exception e) {
+            Log.printStackTrace(e);
+        }
+       
+        if (jb == null)
+            return Status.NOT_FOUND;
+        
         int total = jb.getInt("total_results");
         if (total == 0) {
             return Status.NOT_FOUND;

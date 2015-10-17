@@ -18,7 +18,7 @@ public class Actor implements Serializable {
    }
    
    public String getRole() {
-       return this.name;
+       return this.role;
    }
    
    public String toString() {

@@ -29,7 +29,15 @@ public class Response {
         if (this.status == Status.OK) {
             if (movies.size() > 0) {
                 // return the first one now
-                return movies.get(0).toJasonString();
+                String json = "{\"status\":" + Status.OK + ", \"total_results\":" + movies.size() + ", \"results\":[";
+                for (int i = 0; i < movies.size(); i++) {
+                    json += movies.get(i).toJsonString(); 
+                    if (i != movies.size() - 1)
+                        json += ",";
+                }
+                json += "]}";
+                
+                return json;
             } else {
                 this.status = Status.NOT_FOUND;
             }

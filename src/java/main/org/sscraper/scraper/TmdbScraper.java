@@ -3,6 +3,8 @@
  */
 package org.sscraper.scraper;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,13 +16,14 @@ import org.sscraper.model.tmdb.Casts;
 import org.sscraper.model.tmdb.TmdbConfig;
 import org.sscraper.model.tmdb.TmdbSearchResult;
 import org.sscraper.network.HttpUtils;
+import org.sscraper.utils.Log;
 
 public class TmdbScraper extends ScraperBase {
     private final static String NAME = "TMDB";
     
     private final static String API_KEY = "57983e31fb435df4df77afb854740ea9";
     private final static String SEARCH_URL = "http://api.tmdb.org/3/search/movie?";
-    private final static String CONFIG_URL = " http://api.tmdb.org/3/configuration?";
+    private final static String CONFIG_URL = "http://api.tmdb.org/3/configuration?";
     private final static String INFO_URL = "http://api.tmdb.org/3/movie/";
   
     public TmdbScraper() {
@@ -29,10 +32,31 @@ public class TmdbScraper extends ScraperBase {
 
     public MovieInfo findMovie(String name, String year) {
         SearchResult search = searchMovie(name, year);
-        if (search == null)
+        if (search == null) {
+            Log.d(NAME, "cat not find information of <" + name + ">");
             return null;
+        }
+        
+        Log.d(NAME, "find movie : " + HttpUtils.decodeHttpParam(name, "UTF-8"));
         
         MovieInfo info = new MovieInfo(name);
+        /*
+        byte[] bytes;
+        try {
+            bytes = search.getTitle().getBytes();
+            for (int i = 0 ; i < bytes.length; i++) {
+                Log.d(NAME, String.format("title byte[%d] : 0x%x", i, bytes[i]));
+            }
+            
+            String newTitel = new String(bytes, "iso8859-1");
+            bytes = newTitel.getBytes("iso8859-1");
+            for (int i = 0 ; i < bytes.length; i++) {
+                Log.d(NAME, String.format("new title byte[%d] : 0x%x", i, bytes[i]));
+            }
+            
+        } catch (Exception e) {}
+        */
+        
         info.setTitle(search.getTitle());
         info.setOtherTitle(search.getOriginalTitle());
         info.setReleaseDate(search.getReleaseDate());
@@ -55,7 +79,7 @@ public class TmdbScraper extends ScraperBase {
             ArrayList<Casts.Crew> crews = cast.getCrews();
             if (crews != null && crews.size() > 0) {
                 for (int i = 0; i < crews.size(); i++) {
-                    if (crews.get(i).getJob() == "Director") {
+                    if (crews.get(i).getJob().equals("Director")) {
                         info.addDirector(crews.get(i).getName());
                     }
                 }
@@ -80,7 +104,7 @@ public class TmdbScraper extends ScraperBase {
         
         info.setSource(NAME);
         
-        return null;
+        return info;
     }
     
     private SearchResult searchMovie(String name, String year) {
@@ -93,12 +117,15 @@ public class TmdbScraper extends ScraperBase {
         String response = HttpUtils.httpGet(url);
         if (response != null) {
             SearchResult search = new TmdbSearchResult();
-            int ret = search.parseJason(response);
+            int ret = search.parseJson(response);
             if (ret == Status.OK) 
                 return search;
-            else
+            else {
+                Log.d(NAME, "searchMovie : parserJson fail");
                 return null;
+            }            
         } else {
+            Log.d(NAME, "searchMovie : HttpGet " + url + " fail!");
             return null;
         }
     }
@@ -115,7 +142,11 @@ public class TmdbScraper extends ScraperBase {
             Casts casts = new Casts();
             if (casts.parseJson(response) == Status.OK) {
                 return casts;
+            } else {
+                Log.d(NAME, "getCasts : parse json fail");
             }
+        } else {
+            Log.d(NAME, "getCasts : no response!");
         }
         
         return null;
@@ -128,7 +159,11 @@ public class TmdbScraper extends ScraperBase {
             TmdbConfig config = new TmdbConfig();
             if (config.parseJson(response) == Status.OK) {
                 return config;
+            } else {
+                Log.d(NAME, "getConfig : parse json fail");
             }
+        } else {
+            Log.d(NAME, "getConfig : no response!");
         }
         
         return null;
