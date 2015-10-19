@@ -3,17 +3,21 @@
  */
 package org.sscraper.model;
 
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import sun.net.www.http.PosterOutputStream;
+
 public class MovieInfo {
 
-    private Long zmdbId; // zidoo movie data base id
+    private Long zmdbId; //zidoo movie data base id
     
     private String originalSearchTitle; // original search string from client
     private String searchTitle;         // search title process by guess
     
-    private String title;       // title from internet
+    private String title;       // title from Internet
     private String otherTitle;  // alias if exist
     
     private String releaseDate;
@@ -24,8 +28,8 @@ public class MovieInfo {
     private Double voteAverage;
     //private Long   voteCount;
     
-    private String postorImageUrl;  //  url on the Internet
-    private String postorImageName; //  zmdb poster image name
+    private String posterImageUrl;  //  url on the Internet
+    private String posterImageName; //  zmdb poster image name
     
     private List<String> directors;
     private List<Actor>  actors;
@@ -41,7 +45,7 @@ public class MovieInfo {
         actors = new ArrayList<Actor>();
         scriptWriters = new ArrayList<String>();
         
-        postorImageName = "poster_image.jpg";
+        posterImageName = "poster_image.jpg";
     }
     
     public void setZmdbId(Long zmdbId) {
@@ -134,11 +138,11 @@ public class MovieInfo {
     
     
     public void setPostorImageUrl(String url) {
-        this.postorImageUrl = url;
+        this.posterImageUrl = url;
     }
     
     public String getPosterImageUrl() {
-        return this.postorImageUrl;
+        return this.posterImageUrl;
     }
     
     public void setSource(String source) {
@@ -152,7 +156,7 @@ public class MovieInfo {
     public String toJsonString() {
         String json = "{\"id\":" + this.zmdbId + ", \"title\":\"" + this.title + "\", \"other_title\":\"" + this.otherTitle + "\", \"release_date\":\"" + 
                 this.releaseDate + "\", \"duration\":" + this.duration + ", \"original_language\":\"" + this.language + "\", \"poster_name\":" + 
-                this.postorImageName + "\", \"poster_url\":\"" + this.postorImageUrl  + "\",\"overview\":\"" + this.overView + "\", ";  
+                this.posterImageName + "\", \"poster_url\":\"" + this.posterImageUrl  + "\",\"overview\":\"" + this.overView + "\", ";  
         
         json += "\"directors\":[";
         int i = 0;
@@ -180,5 +184,85 @@ public class MovieInfo {
         json += "]}";
         
         return json;
+    }
+
+    public static String getMysqlCreateTableCommand() {
+        return "CREATE TABLE IF NOT EXISTS movies(id INT PRIMARY KEY AUTO_INCREMENT, " + 
+               "original_search_title VARCHAR(512), " +
+                "search_title VARCHAR(512), " + 
+                "title VARCHAR(512), " + 
+                "other_title VARCHAR(512), " + 
+                "release_date VARCHAR(32), " + 
+                "duration BIGINT, " +
+                "language VARCHAR(10), " + 
+                "overview VARCHAR(1024), " + 
+                "vote_average DOUBLE, " + 
+                "poster_image_url VARCHAR(512), " + 
+                "poster_image_name VARCHAR(64), " +
+                "directors VARCHAR(512), " + 
+                "actors VARCHAR(512), " + 
+                "script_writers VARCHAR(512), " + 
+                "source VARCHAR(10))";        
+    }
+    
+    public String getInsertSqlCmd() {
+        String sql = "INSERT INTO movies (original_search_title,search_title,title,other_title," +
+                "release_date,duration,language,overview,vote_average,poster_image_url,poster_image_name," + 
+                "directors,actors,script_writers,source) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+        return sql;
+    }
+    
+    public void setToStatement(PreparedStatement pstmt) throws SQLException {
+        pstmt.setString(1, originalSearchTitle);
+        pstmt.setString(2, searchTitle);
+        pstmt.setString(3, title);
+        pstmt.setString(4, otherTitle);
+        pstmt.setString(5, releaseDate);
+        pstmt.setLong(6, duration);
+        pstmt.setString(7, language);
+        pstmt.setString(8, overView);
+        pstmt.setDouble(9, voteAverage);
+        pstmt.setString(10, posterImageUrl);
+        pstmt.setString(11, posterImageName);
+        if (directors.size() > 0) {
+            String str = "";
+            for (int i = 0; i < directors.size(); i++) {
+                str += (String)directors.get(i);
+                if (i != directors.size() - 1) {
+                    str += ":"; // separate by ':'
+                }
+            }
+            pstmt.setString(12, str);
+        } else {
+            pstmt.setString(12, "");
+        }
+        
+        if (actors.size() > 0) {
+            String str = "";
+            for (int i = 0; i < actors.size(); i++) {
+                str += actors.get(i).getName();
+                if (i != actors.size() - 1) {
+                    str += ":"; // separate by ':'
+                }
+            }
+            pstmt.setString(13, str);
+        } else {
+            pstmt.setString(13, "");
+        }
+        
+        if (scriptWriters.size() > 0) {
+            String str = "";
+            for (int i = 0; i < scriptWriters.size(); i++) {
+                str += scriptWriters.get(i);
+                if (i != scriptWriters.size() - 1) {
+                    str += ":"; // separate by ':'
+                }
+            }
+            pstmt.setString(14, str);
+        } else {
+            pstmt.setString(14, "");
+        }
+        
+        pstmt.setString(15, source);
     }
 }
