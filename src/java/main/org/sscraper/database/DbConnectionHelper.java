@@ -23,6 +23,7 @@ public class DbConnectionHelper {
                 con = mDataSource.getConnection();
             } catch (Exception e) {
                 Log.printStackTrace(e);
+                return null;
             }
 
             try {

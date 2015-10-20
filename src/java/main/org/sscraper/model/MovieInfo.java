@@ -4,14 +4,18 @@
 package org.sscraper.model;
 
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.sscraper.utils.Log;
+
 import sun.net.www.http.PosterOutputStream;
 
 public class MovieInfo {
-
+    private static String TAG = "MovieInfo";
+    
     private Long zmdbId; //zidoo movie data base id
     
     private String originalSearchTitle; // original search string from client
@@ -238,9 +242,10 @@ public class MovieInfo {
         }
         
         if (actors.size() > 0) {
+            // name1<role1>:name2<role2>:...
             String str = "";
             for (int i = 0; i < actors.size(); i++) {
-                str += actors.get(i).getName();
+                str += actors.get(i).getName() + "<" + actors.get(i).getRole() + ">";
                 if (i != actors.size() - 1) {
                     str += ":"; // separate by ':'
                 }
@@ -264,5 +269,73 @@ public class MovieInfo {
         }
         
         pstmt.setString(15, source);
+    }
+    
+    public MovieInfo(ResultSet rs) throws SQLException {
+        directors = new ArrayList<String>();
+        actors = new ArrayList<Actor>();
+        scriptWriters = new ArrayList<String>();
+        
+        zmdbId = rs.getLong(0);
+        originalSearchTitle = rs.getString(1);
+        searchTitle = rs.getString(2);
+        title = rs.getString(3);
+        otherTitle= rs.getString(4);
+        releaseDate = rs.getString(5);
+        duration = rs.getLong(6);
+        language = rs.getString(7);
+        overView = rs.getString(8);
+        voteAverage = rs.getDouble(9);
+        posterImageUrl = rs.getString(10);
+        posterImageName = rs.getString(11);
+        
+        String Str = rs.getString(12);
+        if (!Str.isEmpty()) {
+            String[] strArray = Str.split(":");
+            if (strArray != null && strArray.length > 0) {
+                for (int i = 0; i < strArray.length; i++) {
+                    directors.add(strArray[i]);
+                }
+            } else {
+                directors.add(Str);
+            }
+        }
+        
+        Str = rs.getString(13);
+        if (!Str.isEmpty()) {
+            // name1<role1>:name2<role2>:...
+            String[] strArray = Str.split(":");
+            if (strArray != null && strArray.length > 0) {
+                for (int i = 0; i < strArray.length; i++) {
+                    int len = strArray[i].length();
+                    int j = strArray[i].indexOf('<');
+                    String name = strArray[i].substring(0, j - 1);
+                    String role = strArray[i].substring(j + 1, len - 1);
+                    Log.d(TAG, "name(" + name + "), role(" + role + ")");
+                    actors.add(new Actor(name, role));
+                }
+            } else {
+                int len = Str.length();
+                int j = Str.indexOf('<');
+                String name = Str.substring(0, j - 1);
+                String role = Str.substring(j + 1, len - 1);
+                Log.d(TAG, "name(" + name + "), role(" + role + ")");
+                actors.add(new Actor(name, role));
+            }
+        }
+        
+        Str = rs.getString(14);
+        if (!Str.isEmpty()) {
+            String[] strArray = Str.split(":");
+            if (strArray != null && strArray.length > 0) {
+                for (int i = 0; i < strArray.length; i++) {
+                    scriptWriters.add(strArray[i]);
+                }
+            } else {
+                scriptWriters.add(Str);
+            }
+        }
+        
+        source = rs.getString(15);
     }
 }

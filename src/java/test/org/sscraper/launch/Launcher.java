@@ -5,9 +5,16 @@ import java.io.IOException;
 import org.sscraper.Response;
 import org.sscraper.ScraperProcess;
 import org.sscraper.Status;
+import org.sscraper.database.DatabaseHelper;
+import org.sscraper.model.MovieInfo;
 import org.sscraper.utils.Log;
 
 import java.nio.ByteBuffer;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 
 import org.apache.http.HttpResponse;
 import org.httpkit.*;
@@ -61,7 +68,7 @@ class ServerHandler implements IHandler {
                     Log.d(TAG, "response to client : " + response);
                     HeaderMap map = new HeaderMap();
                     //map.put("Connection", "Keep-Alive");
-                    map.put("Content-Type", "text/json");
+                    //map.put("Content-Type", "text/json");
                     map.put("content-encoding", "UTF-8");
                     ByteBuffer[] bytes = HttpEncode(200, map, response);
                     cb.run(bytes);
@@ -123,9 +130,26 @@ public class Launcher {
     private final static int port = 8085;
     
     public static void main(String[] args) throws IOException {
+        //testDatabase();
+        testProcess();
+        
+        //startServer();  
+    } 
+    
+    private static void startServer() throws IOException {
         HttpServer server = new HttpServer("0.0.0.0", port, new ServerHandler(), 20480,
                 2048, 1024 * 1024 * 4);
         server.start();
-        Log.d(TAG, "Server run on " + port);        
+        Log.d(TAG, "Server run on " + port);  
+    }
+    
+    private static void testDatabase() {
+        DatabaseHelper helper = new DatabaseHelper();        
+        MovieInfo movie = helper.queryMovieByOriginalTitle("xialuotefannao");
+    }
+    
+    private static void testProcess() {
+        String response = new ScraperProcess("%E5%A4%8F%E6%B4%9B%E7%89%B9%E7%83%A6%E6%81%BC", "2015").findMovie();
+        Log.d(TAG, "get response : " + response);
     }
 }

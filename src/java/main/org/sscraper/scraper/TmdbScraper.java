@@ -37,9 +37,10 @@ public class TmdbScraper extends ScraperBase {
             return null;
         }
         
-        Log.d(NAME, "find movie : " + HttpUtils.decodeHttpParam(name, "UTF-8"));
+        String nameUtf8 =  HttpUtils.decodeHttpParam(name, "UTF-8");
+        Log.d(NAME, "find movie : " + nameUtf8);
         
-        MovieInfo info = new MovieInfo(name);
+        MovieInfo info = new MovieInfo(nameUtf8);
         /*
         byte[] bytes;
         try {
