@@ -59,7 +59,7 @@ public class TmdbScraper extends ScraperBase {
         */
         
         info.setTitle(search.getTitle());
-        info.setOtherTitle(search.getOriginalTitle());
+        info.setOtherTitle(search.getOriginalTitle()); //别名
         info.setReleaseDate(search.getReleaseDate());
         info.setDuration(0L);
         info.setLanguage(search.getOriginalLanguage());

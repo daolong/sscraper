@@ -4,45 +4,50 @@
 package org.sscraper.database;
 
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Properties;
+
 import javax.sql.DataSource;
 import org.apache.commons.dbcp2.BasicDataSource;
-import org.sscraper.utils.Log;
+import org.apache.commons.dbcp2.BasicDataSourceFactory;
 
-public class DbConnectionHelper {
-    private static DataSource mDataSource;
+public class DbcpConnection extends DbConnection {
 
-    public Connection getConnection() {
-        Connection con = null;
-        if (mDataSource != null) {
-            try {
-                con = mDataSource.getConnection();
-            } catch (Exception e) {
-                Log.printStackTrace(e);
-                return null;
-            }
-
-            try {
-                con.setAutoCommit(false);
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-            return con;
-        }
-        return con;
-    }
-
-    public DbConnectionHelper(String connectUrl, String username, String pswd,
+    public DbcpConnection(String connectUrl, String username, String pswd,
             String driverClass, int initialSize, int maxActive, int maxIdle,
             int maxWait, int minIdle) {
         initDataSource(connectUrl, username, pswd, driverClass, initialSize,
                 maxActive, maxIdle, maxWait, minIdle);
     }
 
+    public DbcpConnection(Properties p) {
+        initDataSource(p);
+    }
+    
+    private void initDataSource(Properties p) {
+        try {
+            mDataSource = (BasicDataSource) BasicDataSourceFactory.createDataSource(p);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    public synchronized Connection getConnection() throws SQLException {
+        Connection con = null;
+        if (mDataSource != null) {
+            con = mDataSource.getConnection();
+            con.setAutoCommit(false);
+            return con;
+        }
+        return con;
+    }
+    
     /**
      * Initialize data source 
      * Fox example :

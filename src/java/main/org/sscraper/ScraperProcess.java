@@ -53,6 +53,7 @@ public class ScraperProcess {
            for (int i = 0; i < mScrapers.size(); i++) {
                movie = mScrapers.get(i).findMovie(query, year);
                if (movie != null) {
+                   movie.setOriginalSearchTitle(queryUtf8);
                    // add to data base
                    helper.insertMovie(movie);
                    break;
@@ -67,6 +68,7 @@ public class ScraperProcess {
        }
        
        return (new Response(Status.NOT_FOUND)).toJsonString();
+       
     }
     
    

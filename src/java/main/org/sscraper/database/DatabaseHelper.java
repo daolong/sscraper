@@ -17,31 +17,33 @@ public class DatabaseHelper {
     private static String TAG = "DatabaseHelper";
     
     private DatabaseManager mDbManager;
-
+    private DbConnection mDbConnection;
+    
     public DatabaseHelper() {
         mDbManager = DatabaseManager.getInstance();
-        createTable();
+        mDbConnection =  mDbManager.getDbConnection("mysql");
+        createMoviesTable();
     }
     
     /**
      * Get mysql connection
      * @return
+     * @throws SQLException 
      */
-    private Connection getMysqlConnection() {
-        DbConnectionHelper dbconnhelper = mDbManager.getConnectionHelper("mysql");
-        if (dbconnhelper != null) {
-            return dbconnhelper.getConnection();
+    private Connection getMysqlConnection() throws SQLException {
+        if (mDbConnection != null) {
+            return mDbConnection.getConnection();
         }
         
         return null;
     }
     
     
-    private void createTable() {
+    private void createMoviesTable() {
         Connection conn = null;
         Statement stmt = null;
         String sql = MovieInfo.getMysqlCreateTableCommand();
-        Log.d(TAG, "create : " + sql);
+        Log.d(TAG, "create table sql : " + sql);
         //String sql = "create table if not exists student(NO char(20),name varchar(20),primary key(NO))";
         try {
             conn = getMysqlConnection();
@@ -55,22 +57,9 @@ public class DatabaseHelper {
             Log.printStackTrace(e);
         } 
         finally {
-            
-            if (stmt != null) {
-                try {
-                    stmt.close();
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                }
-            }
-            
-            if (conn != null) {
-                try {
-                    conn.close();
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                }
-            }
+            if (mDbConnection != null) {
+                mDbConnection.closeResources(conn, stmt);
+            } 
         }
     }
     
@@ -79,7 +68,8 @@ public class DatabaseHelper {
         PreparedStatement pstmt = null;
         ResultSet rs = null;
         long id = -1;
-        String sql = movie.getInsertSqlCmd();
+        String sql = movie.getInsertSqlCommand();
+        Log.d(TAG, "insert movie sql : " + sql);
         //String sql = "insert into student(NO,name) values('2012003','xueyouzhang')";
         try {
             conn = getMysqlConnection();
@@ -88,8 +78,9 @@ public class DatabaseHelper {
             
             
             pstmt = (PreparedStatement) conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
-            movie.setToStatement(pstmt);
+            //movie.setToStatement(pstmt);
             int ret = pstmt.executeUpdate();
+            Log.d(TAG, "execute insert ret = " + ret);
             rs = pstmt.getGeneratedKeys();
             if (rs.next()) {
                 id = rs.getLong(1);
@@ -110,22 +101,8 @@ public class DatabaseHelper {
             Log.printStackTrace(e);
         } 
         finally {            
-            if (rs != null) {
-                try {
-                    rs.close();
-                } catch (SQLException e) {e.printStackTrace();}
-            }
-            
-            if (pstmt != null) {
-                try {
-                    pstmt.close();
-                } catch (SQLException e) {e.printStackTrace();}
-            }
-            
-            if (conn != null) {
-                try {
-                    conn.close();
-                } catch (SQLException e) {e.printStackTrace();}
+            if (mDbConnection != null) {
+                mDbConnection.closeResources(conn, pstmt, rs);
             }
         }
         
@@ -143,8 +120,7 @@ public class DatabaseHelper {
         Statement stmt = null;
         ResultSet rs = null;
         
-        String sql = "SELECT * FROM movies WHERE original_search_title='" + originalTitle + "'";
-        //String sql = "SELECT * FROM student";
+        String sql = "SELECT * FROM movies WHERE original_search_title like '%" + originalTitle + "%'";
         try {
             conn = getMysqlConnection();
             if (conn == null)
@@ -152,36 +128,20 @@ public class DatabaseHelper {
             
             stmt = conn.createStatement();
             rs = stmt.executeQuery(sql); 
-            /*
+            int i = 0;
             while (rs.next()) {
-                System.out.println(rs.getString(1) + "\t" + rs.getString(2));
-            }
-            */
-
-            if (rs.next()) {
+                Log.d(TAG, "hit " + i++);
                 return new MovieInfo(rs);
-            } else {
+            }
+            
+            if (i == 0) {
                 Log.d(TAG, "query movie <" + originalTitle + "> no result");
             }
         } catch (Exception e) {
             Log.printStackTrace(e);
         } finally {            
-            if (rs != null) {
-                try {
-                    rs.close();
-                } catch (SQLException e) {e.printStackTrace();}
-            }
-            
-            if (stmt != null) {
-                try {
-                    stmt.close();
-                } catch (SQLException e) {e.printStackTrace();}
-            }
-            
-            if (conn != null) {
-                try {
-                    conn.close();
-                } catch (SQLException e) {e.printStackTrace();}
+            if (mDbConnection != null) {
+                mDbConnection.closeResources(conn, stmt, rs);
             }
         }
         

@@ -131,9 +131,9 @@ public class Launcher {
     
     public static void main(String[] args) throws IOException {
         //testDatabase();
-        testProcess();
+        //testProcess();
         
-        //startServer();  
+        startServer();  
     } 
     
     private static void startServer() throws IOException {

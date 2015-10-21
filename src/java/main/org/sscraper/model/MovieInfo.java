@@ -49,6 +49,11 @@ public class MovieInfo {
         actors = new ArrayList<Actor>();
         scriptWriters = new ArrayList<String>();
         
+        originalSearchTitle = " ";
+        searchTitle = " ";
+        title = " ";
+        otherTitle = " ";
+            
         posterImageName = "poster_image.jpg";
     }
     
@@ -206,7 +211,7 @@ public class MovieInfo {
                 "directors VARCHAR(512), " + 
                 "actors VARCHAR(512), " + 
                 "script_writers VARCHAR(512), " + 
-                "source VARCHAR(10))";        
+                "source VARCHAR(10)) ENGINE=InnoDB DEFAULT CHARSET=utf8";        
     }
     
     public String getInsertSqlCmd() {
@@ -214,6 +219,59 @@ public class MovieInfo {
                 "release_date,duration,language,overview,vote_average,poster_image_url,poster_image_name," + 
                 "directors,actors,script_writers,source) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
         return sql;
+    }
+    
+    public String getInsertSqlCommand() {
+        String sql = "INSERT INTO movies (original_search_title,search_title,title,other_title," +
+                "release_date,duration,language,overview,vote_average,poster_image_url,poster_image_name," + 
+                "directors,actors,script_writers,source)" + " values ('" + originalSearchTitle + "','" + searchTitle + 
+                "','" + title + "','" + otherTitle + "','" + releaseDate + "'," + duration + ",'" + language + "','" + 
+                overView + "',"  +  voteAverage + ",'" + 
+                posterImageUrl + "', '" + posterImageName + "','";
+        
+        String str = "";
+        if (directors.size() > 0) {            
+            for (int i = 0; i < directors.size(); i++) {
+                str += (String)directors.get(i);
+                if (i != directors.size() - 1) {
+                    str += ":"; // separate by ':'
+                }
+            }  
+        } else {
+            str = " ";
+        }
+        sql = sql + str + "','";
+        
+        str = "";
+        if (actors.size() > 0) {
+            // name1<role1>:name2<role2>:...
+            for (int i = 0; i < actors.size(); i++) {
+                str += actors.get(i).getName() + "<" + actors.get(i).getRole() + ">";
+                if (i != actors.size() - 1) {
+                    str += ":"; // separate by ':'
+                }
+            }
+        } else {
+            str = " ";
+        } 
+        sql = sql + str + "','";
+        
+        str = "";
+        if (scriptWriters.size() > 0) {
+            for (int i = 0; i < scriptWriters.size(); i++) {
+                str += scriptWriters.get(i);
+                if (i != scriptWriters.size() - 1) {
+                    str += ":"; // separate by ':'
+                }
+            }
+        } else {
+            str = " ";
+        }
+        sql = sql + str + "','";
+        
+        sql = sql + source + "')";
+        
+        return sql;  
     }
     
     public void setToStatement(PreparedStatement pstmt) throws SQLException {
@@ -276,20 +334,20 @@ public class MovieInfo {
         actors = new ArrayList<Actor>();
         scriptWriters = new ArrayList<String>();
         
-        zmdbId = rs.getLong(0);
-        originalSearchTitle = rs.getString(1);
-        searchTitle = rs.getString(2);
-        title = rs.getString(3);
-        otherTitle= rs.getString(4);
-        releaseDate = rs.getString(5);
-        duration = rs.getLong(6);
-        language = rs.getString(7);
-        overView = rs.getString(8);
-        voteAverage = rs.getDouble(9);
-        posterImageUrl = rs.getString(10);
-        posterImageName = rs.getString(11);
+        zmdbId = rs.getLong(1);
+        originalSearchTitle = rs.getString(2);
+        searchTitle = rs.getString(3);
+        title = rs.getString(4);
+        otherTitle= rs.getString(5);
+        releaseDate = rs.getString(6);
+        duration = rs.getLong(7);
+        language = rs.getString(8);
+        overView = rs.getString(9);
+        voteAverage = rs.getDouble(10);
+        posterImageUrl = rs.getString(11);
+        posterImageName = rs.getString(12);
         
-        String Str = rs.getString(12);
+        String Str = rs.getString(13);
         if (!Str.isEmpty()) {
             String[] strArray = Str.split(":");
             if (strArray != null && strArray.length > 0) {
@@ -301,7 +359,7 @@ public class MovieInfo {
             }
         }
         
-        Str = rs.getString(13);
+        Str = rs.getString(14);
         if (!Str.isEmpty()) {
             // name1<role1>:name2<role2>:...
             String[] strArray = Str.split(":");
@@ -309,22 +367,22 @@ public class MovieInfo {
                 for (int i = 0; i < strArray.length; i++) {
                     int len = strArray[i].length();
                     int j = strArray[i].indexOf('<');
-                    String name = strArray[i].substring(0, j - 1);
+                    String name = strArray[i].substring(0, j);
                     String role = strArray[i].substring(j + 1, len - 1);
-                    Log.d(TAG, "name(" + name + "), role(" + role + ")");
+                    //Log.d(TAG, "name(" + name + "), role(" + role + ")");
                     actors.add(new Actor(name, role));
                 }
             } else {
                 int len = Str.length();
                 int j = Str.indexOf('<');
-                String name = Str.substring(0, j - 1);
+                String name = Str.substring(0, j);
                 String role = Str.substring(j + 1, len - 1);
-                Log.d(TAG, "name(" + name + "), role(" + role + ")");
+                //Log.d(TAG, "name(" + name + "), role(" + role + ")");
                 actors.add(new Actor(name, role));
             }
         }
         
-        Str = rs.getString(14);
+        Str = rs.getString(15);
         if (!Str.isEmpty()) {
             String[] strArray = Str.split(":");
             if (strArray != null && strArray.length > 0) {
@@ -336,6 +394,6 @@ public class MovieInfo {
             }
         }
         
-        source = rs.getString(15);
+        source = rs.getString(16);
     }
 }
