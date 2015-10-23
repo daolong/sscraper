@@ -7,6 +7,8 @@ import java.util.Map;
 
 import org.sscraper.Status;
 
+import com.sun.org.apache.bcel.internal.generic.ARRAYLENGTH;
+
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 
@@ -119,7 +121,7 @@ public class TmdbConfig {
     
     
     /**
-     * HACK: Currently we need base_url and poser_size
+     * HACK: Currently we need base_url, backdrop_size, poser_size
      * @param jsonString
      * @return
      */
@@ -149,13 +151,21 @@ public class TmdbConfig {
         images.setBase_url(base_url);
         
         JSONArray ja = jimage.getJSONArray("poster_sizes");
-        ArrayList<String> poster_sizes = new ArrayList<String>();
-        
-        for (int i = 0; i < ja.size(); i++) {
-            poster_sizes.add(ja.getString(i));
+        if (ja != null) {
+            ArrayList<String> poster_sizes = new ArrayList<String>();            
+            for (int i = 0; i < ja.size(); i++) {
+                poster_sizes.add(ja.getString(i));
+            }           
+            images.setPoster_sizes(poster_sizes);
         }
-       
-        images.setPoster_sizes(poster_sizes);
+        
+        ja = jimage.getJSONArray("backdrop_sizes");
+        if (ja != null) {
+            List<String> backdrop_sizes = new ArrayList<String>();
+            for (int i = 0; i < ja.size(); i++) {
+                backdrop_sizes.add(ja.getString(i));
+            }
+        }
         
         return Status.OK;
     }

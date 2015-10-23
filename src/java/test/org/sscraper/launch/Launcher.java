@@ -7,6 +7,7 @@ import org.sscraper.ScraperProcess;
 import org.sscraper.Status;
 import org.sscraper.database.DatabaseHelper;
 import org.sscraper.model.MovieInfo;
+import org.sscraper.utils.AppConstants;
 import org.sscraper.utils.Log;
 
 import java.nio.ByteBuffer;
@@ -65,7 +66,7 @@ class ServerHandler implements IHandler {
                     cb.requetStop();
                 } else if (request.uri.equals("/search/movie")) {
                     String response = processQuery(request.queryString);
-                    Log.d(TAG, "response to client : " + response);
+                    Log.d(TAG, "response to client : " + response + "\n\n\n ====== \n\n\n");
                     HeaderMap map = new HeaderMap();
                     //map.put("Connection", "Keep-Alive");
                     //map.put("Content-Type", "text/json");
@@ -140,7 +141,7 @@ public class Launcher {
         HttpServer server = new HttpServer("0.0.0.0", port, new ServerHandler(), 20480,
                 2048, 1024 * 1024 * 4);
         server.start();
-        Log.d(TAG, "Server run on " + port);  
+        Log.d(TAG, "Scrpaer Server (V" + AppConstants.VERSION + ") run on " + port);  
     }
     
     private static void testDatabase() {

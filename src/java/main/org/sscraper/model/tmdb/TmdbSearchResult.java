@@ -3,8 +3,6 @@
  */
 package org.sscraper.model.tmdb;
 
-import java.io.UnsupportedEncodingException;
-
 import org.sscraper.Status;
 import org.sscraper.model.SearchResult;
 import org.sscraper.utils.Log;
@@ -44,6 +42,7 @@ public class TmdbSearchResult extends SearchResult {
         overView = ja.getJSONObject(0).getString("overview");
         releaseDate = ja.getJSONObject(0).getString("release_date");
         posterPath = ja.getJSONObject(0).getString("poster_path");
+        backdropPath = ja.getJSONObject(0).getString("backdrop_path");
         voteAverage = ja.getJSONObject(0).getDouble("vote_average");
         voteCount = ja.getJSONObject(0).getLong("vote_count");
         

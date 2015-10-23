@@ -14,31 +14,30 @@ import org.sscraper.model.MovieInfo;
 import org.sscraper.model.SearchResult;
 import org.sscraper.model.tmdb.Casts;
 import org.sscraper.model.tmdb.TmdbConfig;
+import org.sscraper.model.tmdb.TmdbMovie;
+import org.sscraper.model.tmdb.TmdbMovie.Genre;
+import org.sscraper.model.tmdb.TmdbMovie.NameItem;
 import org.sscraper.model.tmdb.TmdbSearchResult;
 import org.sscraper.network.HttpUtils;
+import org.sscraper.utils.AppConstants;
 import org.sscraper.utils.Log;
 
 public class TmdbScraper extends ScraperBase {
     private final static String NAME = "TMDB";
-    
-    private final static String API_KEY = "57983e31fb435df4df77afb854740ea9";
-    private final static String SEARCH_URL = "http://api.tmdb.org/3/search/movie?";
-    private final static String CONFIG_URL = "http://api.tmdb.org/3/configuration?";
-    private final static String INFO_URL = "http://api.tmdb.org/3/movie/";
-  
+   
     public TmdbScraper() {
         super(NAME);
     }
 
     public MovieInfo findMovie(String name, String year) {
-        SearchResult search = searchMovie(name, year);
-        if (search == null) {
-            Log.d(NAME, "cat not find information of <" + name + ">");
-            return null;
-        }
-        
         String nameUtf8 =  HttpUtils.decodeHttpParam(name, "UTF-8");
         Log.d(NAME, "find movie : " + nameUtf8);
+        
+        SearchResult search = searchMovie(name, year);
+        if (search == null) {
+            Log.d(NAME, "can not find information of <" + nameUtf8 + ">");
+            return null;
+        }
         
         MovieInfo info = new MovieInfo(nameUtf8);
         /*
@@ -65,6 +64,37 @@ public class TmdbScraper extends ScraperBase {
         info.setLanguage(search.getOriginalLanguage());
         info.setOverView(search.getOverView());
         info.setVoteAverage(search.getVoteAverage());
+        info.setVoteCount(search.getVoteCount());
+        
+        TmdbMovie movie = getMovieDetail(search.getId());
+        if (movie != null) {
+            int i = 0;
+            // Genre
+            List<Genre> genres = movie.getGenres();
+            if (genres != null && genres.size() > 0) {
+                for (i = 0; i < genres.size(); i++) {
+                    info.addGenre(genres.get(i).getName());
+                }
+            }
+            // Production companies
+            List<NameItem> companies = movie.getProductionCompanies();
+            if (companies != null && companies.size() > 0) {
+                for (i = 0; i < companies.size(); i++) {
+                    info.addProductionCompanies(companies.get(i).getName());
+                }
+            }
+            
+            // Spoken language
+            List<NameItem> langaues = movie.getSpokenLanguages();
+            if (langaues != null && langaues.size() > 0) {
+                for (i = 0; i < langaues.size(); i++) {
+                    info.addSpokenLanguage(langaues.get(i).getName());
+                }
+            }
+            
+            info.setImdbId(movie.getImdbId());
+            info.setDuration(movie.getRuntime());
+        }
         
         // get casts, director, script writer ...
         Casts cast = getCasts(search.getId());
@@ -95,11 +125,19 @@ public class TmdbScraper extends ScraperBase {
                 String url;
                 if (config.getImages().getPoster_sizes().size() > 0) {   
                     int last = config.getImages().getPoster_sizes().size() - 1;
-                    url = base_url + config.getImages().getPoster_sizes().get(last) + "/" + search.getPosterPath();         
+                    url = base_url + config.getImages().getPoster_sizes().get(last) + search.getPosterPath();         
                 } else {
-                    url = base_url + "original/" + search.getPosterPath();
+                    url = base_url + "original" + search.getPosterPath();
                 }
                 info.setPostorImageUrl(url);
+                
+                if (config.getImages().getBackdrop_sizes().size() > 0) {   
+                    int last = config.getImages().getBackdrop_sizes().size() - 1;
+                    url = base_url + config.getImages().getBackdrop_sizes().get(last) + search.getBackdropPath();         
+                } else {
+                    url = base_url + "original" + search.getBackdropPath();
+                }
+                info.setBackDropImageUrl(url);
             }            
         } 
         
@@ -107,13 +145,13 @@ public class TmdbScraper extends ScraperBase {
         
         return info;
     }
-    
+
     private SearchResult searchMovie(String name, String year) {
         String url;
         if (year != null)
-            url = SEARCH_URL + "api_key=" + API_KEY + "&query=" + name + "&year=" + year + "&language=zh";
+            url = AppConstants.TMDB_SEARCH_URL + "api_key=" + AppConstants.TMDB_API_KEY + "&query=" + name + "&year=" + year + "&language=zh";
         else 
-            url = SEARCH_URL + "api_key=" + API_KEY + "&query=" + name + "&language=zh";
+            url = AppConstants.TMDB_SEARCH_URL + "api_key=" + AppConstants.TMDB_API_KEY + "&query=" + name + "&language=zh";
         
         String response = HttpUtils.httpGet(url);
         if (response != null) {
@@ -132,12 +170,34 @@ public class TmdbScraper extends ScraperBase {
     }
     
     /**
+     * get movie detail information
+     * @param id
+     * @return
+     */
+    private TmdbMovie getMovieDetail(Long id) {
+        String url = AppConstants.ZMDB_INFO_URL + id + "?api_key=" + AppConstants.TMDB_API_KEY + "&language=zh";
+        String response = HttpUtils.httpGet(url);
+        if (response != null) {
+            TmdbMovie movie = new TmdbMovie();
+            if (movie.parseJson(response) == Status.OK) {
+                return movie;
+            } else {
+                Log.d(NAME, "getMovieDetail : parse json fail");
+            }
+        } else {
+            Log.d(NAME, "getMovieDetail : no response!");
+        }
+        
+        return null;
+    }
+    
+    /**
      * Get actors & directors ...
      * @param id The movie data base id 
      * @return
      */
     private Casts getCasts(Long id) {
-        String url = INFO_URL + id + "/casts?api_key=" + API_KEY + "&language=zh"; 
+        String url = AppConstants.ZMDB_INFO_URL + id + "/casts?api_key=" + AppConstants.TMDB_API_KEY + "&language=zh"; 
         String response = HttpUtils.httpGet(url);
         if (response != null) {
             Casts casts = new Casts();
@@ -154,7 +214,7 @@ public class TmdbScraper extends ScraperBase {
     }
     
     private TmdbConfig getConfig() {
-        String url = CONFIG_URL + "api_key=" + API_KEY;
+        String url = AppConstants.TMDB_CONFIG_URL + "api_key=" + AppConstants.TMDB_API_KEY;
         String response = HttpUtils.httpGet(url);
         if (response != null) {
             TmdbConfig config = new TmdbConfig();

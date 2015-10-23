@@ -9,6 +9,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.sscraper.utils.AppConstants;
 import org.sscraper.utils.Log;
 
 import sun.net.www.http.PosterOutputStream;
@@ -16,7 +17,8 @@ import sun.net.www.http.PosterOutputStream;
 public class MovieInfo {
     private static String TAG = "MovieInfo";
     
-    private Long zmdbId; //zidoo movie data base id
+    private Long zmdbId; // zidoo movie data base id
+    private String imdbId; // imdb id
     
     private String originalSearchTitle; // original search string from client
     private String searchTitle;         // search title process by guess
@@ -30,24 +32,36 @@ public class MovieInfo {
     private String overView;
     
     private Double voteAverage;
-    //private Long   voteCount;
+    private Long   voteCount;
     
     private String posterImageUrl;  //  url on the Internet
     private String posterImageName; //  zmdb poster image name
+    private String backDropImageName; // zmdb backdrop image name
+    private String backDropImageUrl; // url on the Internet
     
+    private List<String> genres;
     private List<String> directors;
     private List<Actor>  actors;
     private List<String> scriptWriters;    
-
+    private List<String> productionCompanies;
+    private List<String> spokenLanguages;
     private String source; // tmdb, m1905, douban etc.
     
     public MovieInfo(String searchTitle) {
         this.searchTitle = searchTitle;
         
-        zmdbId = -1L; // meaning not add to data base
+        zmdbId = -1L; // means invalid
+        imdbId = "";  // means invalid
+        
+        voteAverage = 0.0;
+        voteCount = 0L;
+        
+        genres = new ArrayList<String>();
         directors = new ArrayList<String>();
         actors = new ArrayList<Actor>();
         scriptWriters = new ArrayList<String>();
+        productionCompanies = new ArrayList<String>();
+        spokenLanguages = new ArrayList<String>();
         
         originalSearchTitle = " ";
         searchTitle = " ";
@@ -55,6 +69,7 @@ public class MovieInfo {
         otherTitle = " ";
             
         posterImageName = "poster_image.jpg";
+        backDropImageName = "backdrop_image.jpg";
     }
     
     public void setZmdbId(Long zmdbId) {
@@ -64,6 +79,9 @@ public class MovieInfo {
     public Long getZmdb() {
         return this.zmdbId;
     }
+    
+    public void setImdbId(String id) { this.imdbId = id; }
+    public String getImdbId() { return this.imdbId; }
     
     public void setOriginalSearchTitle(String originalSearchTitle) { this.originalSearchTitle = originalSearchTitle; }
     
@@ -121,9 +139,30 @@ public class MovieInfo {
         return this.overView;
     }
     
-    public void setVoteAverage(Double voteAverage) { this.voteAverage = voteAverage; }
-    
+    public void setVoteAverage(Double voteAverage) { this.voteAverage = voteAverage; }    
     public Double getVoteAverage() { return this.voteAverage; }
+    
+    public void setVoteCount(Long voteCount) { this.voteCount = voteCount; }
+    public Long getVoteCount() { return this.voteCount; }
+    
+    public void setPostorImageUrl(String url) {
+        this.posterImageUrl = url;
+    }
+    
+    public String getPosterImageUrl() {
+        return this.posterImageUrl;
+    }
+    
+    public void setBackDropImageUrl(String url) {
+        this.backDropImageUrl = url;
+    }
+    
+    public String getBackDropImageUrl() {
+        return this.backDropImageUrl;
+    }
+    
+    public void addGenre(String genre) { this.genres.add(genre);}
+    public List<String> getGenres() { return this.genres; }
     
     public void addDirector(String director) {
         this.directors.add(director);
@@ -145,15 +184,12 @@ public class MovieInfo {
         this.scriptWriters.add(scriptWriter);
     }
     
+    public void addProductionCompanies(String company) { this.productionCompanies.add(company);}
+    public List<String> getProductionCompanies() { return this.productionCompanies; }
     
-    public void setPostorImageUrl(String url) {
-        this.posterImageUrl = url;
-    }
-    
-    public String getPosterImageUrl() {
-        return this.posterImageUrl;
-    }
-    
+    public void addSpokenLanguage(String language) { this.spokenLanguages.add(language);}
+    public List<String> getSpokenLanguages() { return this.spokenLanguages; }
+      
     public void setSource(String source) {
         this.source = source;
     }
@@ -162,14 +198,31 @@ public class MovieInfo {
         return this.source;
     }
     
+    /**
+     * Serialize MovieInfo to json string
+     * @return
+     */
     public String toJsonString() {
-        String json = "{\"id\":" + this.zmdbId + ", \"title\":\"" + this.title + "\", \"other_title\":\"" + this.otherTitle + "\", \"release_date\":\"" + 
-                this.releaseDate + "\", \"duration\":" + this.duration + ", \"original_language\":\"" + this.language + "\", \"poster_name\":" + 
-                this.posterImageName + "\", \"poster_url\":\"" + this.posterImageUrl  + "\",\"overview\":\"" + this.overView + "\", ";  
+        String json = "{\"id\":\"" + this.zmdbId + "\", \"imdb_id\":\"" + imdbId + "\", \"title\":\"" + this.title + "\", \"other_title\":\"" + this.otherTitle + "\", \"release_date\":\"" + 
+                this.releaseDate + "\", \"duration\":" + this.duration + ", \"original_language\":\"" + this.language + "\",\"image_base_url\":\"" + AppConstants.IMAGE_BASE_URL + 
+                "\", \"poster_image_name\":\"" + this.posterImageName + "\", \"poster_image_url\":\"" + this.posterImageUrl  + "\", backdrop_image_name\":\"" + backDropImageName + 
+                "\", \"backdrop_image_url\":\"" + backDropImageUrl + "\", \"vote_average\":" + voteAverage + ", \"vote_count\":" + voteCount +
+                ",\"over_view\":\"" + this.overView + "\", "; 
+        
+        json += "\"genres\":[";
+        int i = 0;        
+        int size = genres.size();
+        for (i = 0; i < size; i++) {
+            if (i == size - 1) {
+                json += "{\"name\":\"" + genres.get(i) + "\"}";
+            } else {
+                json += "{\"name\":\"" + genres.get(i) + "\"},";
+            }
+        }
+        json += "],";
         
         json += "\"directors\":[";
-        int i = 0;
-        int size = directors.size();
+        size = directors.size();
         for (i = 0; i < size; i++) {
             if (i == size - 1) {
                 json += "{\"name\":\"" + directors.get(i) + "\"}";
@@ -179,7 +232,7 @@ public class MovieInfo {
         }
         json += "],";
         
-        json += "\"actor\":[";
+        json += "\"actors\":[";
         size = actors.size();
         Actor actor;
         for (i = 0; i < size; i++) {
@@ -190,13 +243,40 @@ public class MovieInfo {
                 json += "{\"name\":\"" + actor.getName() + "\", \"role\":\"" + actor.getRole() + "\"},";
             }
         }
+        json += "],";
+        
+        json += "\"production_companies\":[";
+        size = productionCompanies.size();
+        for (i = 0; i < size; i++) {
+            if (i == size - 1) {
+                json += "{\"name\":\"" + productionCompanies.get(i) + "\"}";
+            } else {
+                json += "{\"name\":\"" + productionCompanies.get(i) + "\"},";
+            }
+        }
+        json += "],";
+        
+        json += "\"spoken_languages\":[";
+        size = spokenLanguages.size();
+        for (i = 0; i < size; i++) {
+            if (i == size - 1) {
+                json += "{\"name\":\"" + spokenLanguages.get(i) + "\"}";
+            } else {
+                json += "{\"name\":\"" + spokenLanguages.get(i) + "\"},";
+            }
+        }
         json += "]}";
         
         return json;
     }
 
+    /**
+     * Get create 'movies' table sql command string
+     * @return
+     */
     public static String getMysqlCreateTableCommand() {
-        return "CREATE TABLE IF NOT EXISTS movies(id INT PRIMARY KEY AUTO_INCREMENT, " + 
+        return "CREATE TABLE IF NOT EXISTS movies(id BIGINT PRIMARY KEY AUTO_INCREMENT, " + 
+               "imdb_id VARCHAR(32), " + 
                "original_search_title VARCHAR(512), " +
                 "search_title VARCHAR(512), " + 
                 "title VARCHAR(512), " + 
@@ -206,14 +286,25 @@ public class MovieInfo {
                 "language VARCHAR(10), " + 
                 "overview VARCHAR(1024), " + 
                 "vote_average DOUBLE, " + 
+                "vote_count   BIGINT, " +
                 "poster_image_url VARCHAR(512), " + 
-                "poster_image_name VARCHAR(64), " +
+                "poster_image_name VARCHAR(64), " + 
+                "backdrop_image_url VARCHAR(512), " +
+                "backdrop_image_name VARCHAR(64), " + 
+                "genres VARCHAR(512), " +
                 "directors VARCHAR(512), " + 
                 "actors VARCHAR(512), " + 
                 "script_writers VARCHAR(512), " + 
+                "production_companies VARCHAR(512), " + 
+                "spoken_languages VARCHAR(256), " +
                 "source VARCHAR(10)) ENGINE=InnoDB DEFAULT CHARSET=utf8";        
     }
     
+    /**
+     * HACK: not use now
+     * Get insert movie to data base sql command string for prepare statement
+     * @return
+     */
     public String getInsertSqlCmd() {
         String sql = "INSERT INTO movies (original_search_title,search_title,title,other_title," +
                 "release_date,duration,language,overview,vote_average,poster_image_url,poster_image_name," + 
@@ -221,15 +312,32 @@ public class MovieInfo {
         return sql;
     }
     
+    /**
+     * Get insert movie to data base sql command string
+     * @return
+     */
     public String getInsertSqlCommand() {
-        String sql = "INSERT INTO movies (original_search_title,search_title,title,other_title," +
-                "release_date,duration,language,overview,vote_average,poster_image_url,poster_image_name," + 
-                "directors,actors,script_writers,source)" + " values ('" + originalSearchTitle + "','" + searchTitle + 
-                "','" + title + "','" + otherTitle + "','" + releaseDate + "'," + duration + ",'" + language + "','" + 
-                overView + "',"  +  voteAverage + ",'" + 
-                posterImageUrl + "', '" + posterImageName + "','";
+        String sql = "INSERT INTO movies (imdb_id, original_search_title,search_title,title,other_title," +
+                "release_date,duration,language,overview,vote_average,vote_count,poster_image_url,poster_image_name," + 
+                "backdrop_image_url,backdrop_image_name,genres,directors,actors,script_writers,production_companies,spoken_languages,source)" + 
+                " values ('" + imdbId + "','" + originalSearchTitle + "','" + searchTitle + "','" + title + "','" + otherTitle + "','" + 
+                releaseDate + "'," + duration + ",'" + language + "','" + overView + "',"  +  voteAverage + "," + voteCount + ",'" +  
+                posterImageUrl + "', '" + posterImageName + "','" + backDropImageUrl + "','" + backDropImageName + "','";
         
         String str = "";
+        if (directors.size() > 0) {            
+            for (int i = 0; i < directors.size(); i++) {
+                str += (String)directors.get(i);
+                if (i != directors.size() - 1) {
+                    str += ":"; // separate by ':'
+                }
+            }  
+        } else {
+            str = " ";
+        }
+        sql = sql + str + "','";
+        
+        str = "";
         if (directors.size() > 0) {            
             for (int i = 0; i < directors.size(); i++) {
                 str += (String)directors.get(i);
@@ -269,11 +377,43 @@ public class MovieInfo {
         }
         sql = sql + str + "','";
         
+        str = "";
+        if (productionCompanies.size() > 0) {
+            for (int i = 0; i < productionCompanies.size(); i++) {
+                str += productionCompanies.get(i);
+                if (i != productionCompanies.size() - 1) {
+                    str += ":"; // separate by ':'
+                }
+            }
+        } else {
+            str = " ";
+        }
+        sql = sql + str + "','";
+        
+        str = "";
+        if (spokenLanguages.size() > 0) {
+            for (int i = 0; i < spokenLanguages.size(); i++) {
+                str += spokenLanguages.get(i);
+                if (i != spokenLanguages.size() - 1) {
+                    str += ":"; // separate by ':'
+                }
+            }
+        } else {
+            str = " ";
+        }
+        sql = sql + str + "','";
+        
         sql = sql + source + "')";
         
         return sql;  
     }
     
+    /**
+     * HACK: not use now
+     * Set record to statement
+     * @param pstmt
+     * @throws SQLException
+     */
     public void setToStatement(PreparedStatement pstmt) throws SQLException {
         pstmt.setString(1, originalSearchTitle);
         pstmt.setString(2, searchTitle);
@@ -329,26 +469,50 @@ public class MovieInfo {
         pstmt.setString(15, source);
     }
     
-    public MovieInfo(ResultSet rs) throws SQLException {
+    /**
+     * Build movie information from data base result
+     * @param rs
+     * @throws SQLException
+     */
+    public MovieInfo(ResultSet rs) throws SQLException {        
+        genres = new ArrayList<String>();
         directors = new ArrayList<String>();
         actors = new ArrayList<Actor>();
         scriptWriters = new ArrayList<String>();
+        productionCompanies = new ArrayList<String>();
+        spokenLanguages = new ArrayList<String>();
         
-        zmdbId = rs.getLong(1);
-        originalSearchTitle = rs.getString(2);
-        searchTitle = rs.getString(3);
-        title = rs.getString(4);
-        otherTitle= rs.getString(5);
-        releaseDate = rs.getString(6);
-        duration = rs.getLong(7);
-        language = rs.getString(8);
-        overView = rs.getString(9);
-        voteAverage = rs.getDouble(10);
-        posterImageUrl = rs.getString(11);
-        posterImageName = rs.getString(12);
+        zmdbId = rs.getLong("id");
+        imdbId = rs.getString("imdb_id");
+        originalSearchTitle = rs.getString("original_search_title");
+        searchTitle = rs.getString("search_title");
+        title = rs.getString("title");
+        otherTitle= rs.getString("other_title");
+        releaseDate = rs.getString("release_date");
+        duration = rs.getLong("duration");
+        language = rs.getString("language");
+        overView = rs.getString("overview");
+        voteAverage = rs.getDouble("vote_average");
+        voteCount = rs.getLong("vote_count");
+        posterImageUrl = rs.getString("poster_image_url");
+        posterImageName = rs.getString("poster_image_name");
+        backDropImageUrl = rs.getString("backdrop_image_url");
+        backDropImageName = rs.getString("backdrop_image_name");
         
-        String Str = rs.getString(13);
-        if (!Str.isEmpty()) {
+        String Str = rs.getString("genres");
+        if (!Str.isEmpty() && !Str.equals(" ")) {
+            String[] strArray = Str.split(":");
+            if (strArray != null && strArray.length > 0) {
+                for (int i = 0; i < strArray.length; i++) {
+                    genres.add(strArray[i]);
+                }
+            } else {
+                genres.add(Str);
+            }
+        }
+        
+        Str = rs.getString("directors");
+        if (!Str.isEmpty() && !Str.equals(" ")) {
             String[] strArray = Str.split(":");
             if (strArray != null && strArray.length > 0) {
                 for (int i = 0; i < strArray.length; i++) {
@@ -359,18 +523,22 @@ public class MovieInfo {
             }
         }
         
-        Str = rs.getString(14);
-        if (!Str.isEmpty()) {
+        Str = rs.getString("actors");
+        if (!Str.isEmpty() && !Str.equals(" ")) {
             // name1<role1>:name2<role2>:...
             String[] strArray = Str.split(":");
             if (strArray != null && strArray.length > 0) {
                 for (int i = 0; i < strArray.length; i++) {
                     int len = strArray[i].length();
                     int j = strArray[i].indexOf('<');
-                    String name = strArray[i].substring(0, j);
-                    String role = strArray[i].substring(j + 1, len - 1);
-                    //Log.d(TAG, "name(" + name + "), role(" + role + ")");
-                    actors.add(new Actor(name, role));
+                    if (j > 0) { 
+                        String name = strArray[i].substring(0, j);
+                        String role = strArray[i].substring(j + 1, len - 1);
+                        //Log.d(TAG, "name(" + name + "), role(" + role + ")");
+                        actors.add(new Actor(name, role));
+                    } else {
+                        Log.d(TAG, "actor string forma error : " + Str);
+                    }
                 }
             } else {
                 int len = Str.length();
@@ -382,8 +550,8 @@ public class MovieInfo {
             }
         }
         
-        Str = rs.getString(15);
-        if (!Str.isEmpty()) {
+        Str = rs.getString("script_writers");
+        if (!Str.isEmpty() && !Str.equals(" ")) {
             String[] strArray = Str.split(":");
             if (strArray != null && strArray.length > 0) {
                 for (int i = 0; i < strArray.length; i++) {
@@ -394,6 +562,30 @@ public class MovieInfo {
             }
         }
         
-        source = rs.getString(16);
+        Str = rs.getString("production_companies");
+        if (!Str.isEmpty() && !Str.equals(" ")) {
+            String[] strArray = Str.split(":");
+            if (strArray != null && strArray.length > 0) {
+                for (int i = 0; i < strArray.length; i++) {
+                    productionCompanies.add(strArray[i]);
+                }
+            } else {
+                productionCompanies.add(Str);
+            }
+        }
+        
+        Str = rs.getString("spoken_languages");
+        if (!Str.isEmpty() && !Str.equals(" ")) {
+            String[] strArray = Str.split(":");
+            if (strArray != null && strArray.length > 0) {
+                for (int i = 0; i < strArray.length; i++) {
+                    spokenLanguages.add(strArray[i]);
+                }
+            } else {
+                spokenLanguages.add(Str);
+            }
+        }
+        
+        source = rs.getString("source");
     }
 }

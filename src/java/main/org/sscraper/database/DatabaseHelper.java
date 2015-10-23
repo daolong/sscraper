@@ -44,7 +44,6 @@ public class DatabaseHelper {
         Statement stmt = null;
         String sql = MovieInfo.getMysqlCreateTableCommand();
         Log.d(TAG, "create table sql : " + sql);
-        //String sql = "create table if not exists student(NO char(20),name varchar(20),primary key(NO))";
         try {
             conn = getMysqlConnection();
             if (conn == null)
@@ -70,7 +69,6 @@ public class DatabaseHelper {
         long id = -1;
         String sql = movie.getInsertSqlCommand();
         Log.d(TAG, "insert movie sql : " + sql);
-        //String sql = "insert into student(NO,name) values('2012003','xueyouzhang')";
         try {
             conn = getMysqlConnection();
             if (conn == null)

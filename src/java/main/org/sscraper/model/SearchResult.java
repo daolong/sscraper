@@ -15,6 +15,7 @@ public class SearchResult {
     protected String overView;
     protected String releaseDate;
     protected String posterPath; // poster image url
+    protected String backdropPath;
     protected Double voteAverage;
     protected Long   voteCount;
     
@@ -32,6 +33,8 @@ public class SearchResult {
     public String getReleaseDate() { return this.releaseDate; } 
     
     public String getPosterPath() { return this.posterPath; }
+    
+    public String getBackdropPath() { return this.backdropPath; }
     
     public Double getVoteAverage() { return this.voteAverage; }
     

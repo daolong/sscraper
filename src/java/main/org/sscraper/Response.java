@@ -57,7 +57,7 @@ public class Response {
             decribtion = "can not find movie information";
         }
         
-        jason += "\"decribtion\":\"" + decribtion + "\"";
+        jason += "\"decribtion\":\"" + decribtion + "\"}";
         
         return jason;
         
