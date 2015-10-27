@@ -17,6 +17,9 @@ import sun.net.www.http.PosterOutputStream;
 public class MovieInfo {
     private static String TAG = "MovieInfo";
     
+    // max actors record count. We ignore the record if exceed
+    private static int MAX_ACTOR_RECORD_COUNT = 20;
+    
     private Long zmdbId; // zidoo movie data base id
     private String imdbId; // imdb id
     
@@ -293,7 +296,7 @@ public class MovieInfo {
                 "backdrop_image_name VARCHAR(64), " + 
                 "genres VARCHAR(512), " +
                 "directors VARCHAR(512), " + 
-                "actors VARCHAR(512), " + 
+                "actors VARCHAR(1024), " + 
                 "script_writers VARCHAR(512), " + 
                 "production_companies VARCHAR(512), " + 
                 "spoken_languages VARCHAR(256), " +
@@ -312,6 +315,10 @@ public class MovieInfo {
         return sql;
     }
     
+    private String preprocess(String str) {
+        return str.replace("\'", "\\\'");
+    }
+    
     /**
      * Get insert movie to data base sql command string
      * @return
@@ -320,22 +327,22 @@ public class MovieInfo {
         String sql = "INSERT INTO movies (imdb_id, original_search_title,search_title,title,other_title," +
                 "release_date,duration,language,overview,vote_average,vote_count,poster_image_url,poster_image_name," + 
                 "backdrop_image_url,backdrop_image_name,genres,directors,actors,script_writers,production_companies,spoken_languages,source)" + 
-                " values ('" + imdbId + "','" + originalSearchTitle + "','" + searchTitle + "','" + title + "','" + otherTitle + "','" + 
-                releaseDate + "'," + duration + ",'" + language + "','" + overView + "',"  +  voteAverage + "," + voteCount + ",'" +  
+                " values ('" + imdbId + "','" + preprocess(originalSearchTitle) + "','" + preprocess(searchTitle) + "','" + preprocess(title) + "','" + 
+                preprocess(otherTitle) + "','" + releaseDate + "'," + duration + ",'" + language + "','" + preprocess(overView) + "',"  +  voteAverage + "," + voteCount + ",'" +  
                 posterImageUrl + "', '" + posterImageName + "','" + backDropImageUrl + "','" + backDropImageName + "','";
         
         String str = "";
-        if (directors.size() > 0) {            
-            for (int i = 0; i < directors.size(); i++) {
-                str += (String)directors.get(i);
-                if (i != directors.size() - 1) {
+        if (genres.size() > 0) {            
+            for (int i = 0; i < genres.size(); i++) {
+                str += (String)genres.get(i);
+                if (i != genres.size() - 1) {
                     str += ":"; // separate by ':'
                 }
             }  
         } else {
             str = " ";
         }
-        sql = sql + str + "','";
+        sql = sql + preprocess(str) + "','";
         
         str = "";
         if (directors.size() > 0) {            
@@ -348,21 +355,23 @@ public class MovieInfo {
         } else {
             str = " ";
         }
-        sql = sql + str + "','";
+        sql = sql + preprocess(str) + "','";
         
         str = "";
-        if (actors.size() > 0) {
+        int count = actors.size(); 
+        if (count > 0) {
             // name1<role1>:name2<role2>:...
-            for (int i = 0; i < actors.size(); i++) {
+            int real_count = (count  > MAX_ACTOR_RECORD_COUNT) ? MAX_ACTOR_RECORD_COUNT : count;
+            for (int i = 0; i < real_count; i++) {
                 str += actors.get(i).getName() + "<" + actors.get(i).getRole() + ">";
-                if (i != actors.size() - 1) {
+                if (i != real_count - 1) {
                     str += ":"; // separate by ':'
                 }
             }
         } else {
             str = " ";
         } 
-        sql = sql + str + "','";
+        sql = sql + preprocess(str) + "','";
         
         str = "";
         if (scriptWriters.size() > 0) {
@@ -375,7 +384,7 @@ public class MovieInfo {
         } else {
             str = " ";
         }
-        sql = sql + str + "','";
+        sql = sql + preprocess(str) + "','";
         
         str = "";
         if (productionCompanies.size() > 0) {
@@ -388,7 +397,7 @@ public class MovieInfo {
         } else {
             str = " ";
         }
-        sql = sql + str + "','";
+        sql = sql + preprocess(str) + "','";
         
         str = "";
         if (spokenLanguages.size() > 0) {
@@ -401,7 +410,7 @@ public class MovieInfo {
         } else {
             str = " ";
         }
-        sql = sql + str + "','";
+        sql = sql + preprocess(str) + "','";
         
         sql = sql + source + "')";
         

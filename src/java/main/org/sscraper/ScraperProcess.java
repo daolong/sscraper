@@ -44,7 +44,7 @@ public class ScraperProcess {
        // TODO guess the movie title
        
         
-       // query form data base first
+       // query from data base first
        DatabaseHelper helper = new DatabaseHelper();
        MovieInfo movie = helper.queryMovieByOriginalTitle(queryUtf8);
        
