@@ -14,6 +14,9 @@ public class AppConstants {
     public final static String TMDB_CONFIG_URL = "http://api.tmdb.org/3/configuration?";
     public final static String ZMDB_INFO_URL = "http://api.tmdb.org/3/movie/";
     
+    // dou ban data base
+    public final static String DOUBAN_SEARCH_URL = "http:://api.douban.com/v2/movie/search?";
+    
     // mysql server address
     public final static String MYSQL_SERVER = "192.168.11.127:3306";
     
