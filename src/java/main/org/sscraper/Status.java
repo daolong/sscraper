@@ -10,4 +10,5 @@ public class Status {
     public final static int NOT_FOUND   = 1003; // could not find information
     public final static int AUTH_FAIL   = 1004; // permission denied
     public final static int OUT_OF_DATE = 1005; // authorization out of date
+    public final static int FORMAT_ERROR = 1006; // 
 }
