@@ -32,7 +32,7 @@ public class TmdbSearchResult extends SearchResult {
         
         // FIXME: we get the first result now       
         JSONArray ja = jb.getJSONArray("results");
-        if (ja == null)
+        if (ja == null  || ja.isEmpty())
             return Status.NOT_FOUND;
         
         id = ja.getJSONObject(0).getLong("id");

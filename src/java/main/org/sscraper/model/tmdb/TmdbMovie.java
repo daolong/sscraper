@@ -7,6 +7,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.sscraper.Status;
+import org.sscraper.model.Genre;
+import org.sscraper.model.NameItem;
 import org.sscraper.model.tmdb.TmdbConfig.Images;
 
 import net.sf.json.JSONArray;
@@ -34,24 +36,6 @@ public class TmdbMovie {
     private Double voteAverage;
     private Long voteCount;
     private String trailer;
-
-    public static class Genre {
-        private Long id;
-        private String name;
-        
-        public void setId(Long id) { this.id = id; }
-        public Long getId() { return this.id; }
-        
-        public void setName(String name) { this.name = name; }
-        public String getName() { return this.name; }
-    }
-    
-    public static class NameItem {
-        private String name;
-        
-        public String getName() { return name; }
-        public void setName(String name) { this.name = name; }        
-    }
     
     private List<Genre> genres = new ArrayList<Genre>();
     private List<NameItem> productionCompanies = new ArrayList<NameItem>();

@@ -26,9 +26,9 @@ public class ScraperProcess {
         this.query = query;
         this.year = year;
         
+        registerScrpaer(new DoubanScraper());
         registerScrpaer((ScraperBase)new TmdbScraper());
         //registerScrpaer(new M1905Scraper());
-       // registerScrpaer(new DoubanScraper());
     }
     
     private void registerScrpaer(ScraperBase scraper) {

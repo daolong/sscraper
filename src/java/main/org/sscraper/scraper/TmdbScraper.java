@@ -3,20 +3,19 @@
  */
 package org.sscraper.scraper;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URLDecoder;
+
 import java.util.ArrayList;
 import java.util.List;
 
 import org.sscraper.Status;
 import org.sscraper.model.Actor;
+import org.sscraper.model.Genre;
 import org.sscraper.model.MovieInfo;
+import org.sscraper.model.NameItem;
 import org.sscraper.model.SearchResult;
 import org.sscraper.model.tmdb.Casts;
 import org.sscraper.model.tmdb.TmdbConfig;
 import org.sscraper.model.tmdb.TmdbMovie;
-import org.sscraper.model.tmdb.TmdbMovie.Genre;
-import org.sscraper.model.tmdb.TmdbMovie.NameItem;
 import org.sscraper.model.tmdb.TmdbSearchResult;
 import org.sscraper.network.HttpUtils;
 import org.sscraper.utils.AppConstants;

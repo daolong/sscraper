@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.sscraper.Status;
+import org.sscraper.model.NameItem;
 import org.sscraper.utils.Log;
 
 import com.mysql.fabric.xmlrpc.base.Array;
@@ -34,17 +35,6 @@ public class DoubanSearchResult {
     
     public ArrayList<Subject> getSubjects() { return this.subjects; }
     public void addSubject(Subject subject) { subjects.add(subject); }
-    
-    
-    public static class NameItem {
-        private String name;
-        public void setName(String name) { this.name = name; }
-        public String getName() { return this.name; }
-
-        public String toString() {
-            return name;
-        }
-    }
     
     public static class Subject {
         
@@ -98,7 +88,7 @@ public class DoubanSearchResult {
         public String getId() { return this.id; }
         
         public int fromJsonObject(JSONObject jb) {
-            if (jb == null)
+            if (jb == null || jb.isEmpty())
                 return Status.NOT_FOUND;
 
             rating = new Rating();
@@ -161,13 +151,14 @@ public class DoubanSearchResult {
     public static class Rating {
         private int max;
         private Double average;
-        private int stars;
+        private int stars; // how many people vote this
         private int min;
         
         public Double getAverage() { return this.average; }
+        public int getStars() { return this.stars; }
         
         public int fromJsonOject(JSONObject jb) {
-            if (jb == null)
+            if (jb == null || jb.isEmpty())
                 return Status.NOT_FOUND;
             
             max = jb.getInt("max");
@@ -187,7 +178,7 @@ public class DoubanSearchResult {
         public String getLarge() { return large; }
         
         public int fromJsonObject(JSONObject jb) {
-            if (jb == null)
+            if (jb == null || jb.isEmpty())
                 return Status.NOT_FOUND;
             
             small = jb.getString("small");
@@ -207,7 +198,7 @@ public class DoubanSearchResult {
         public String getName() { return name; }
         
         public int fromJsonObject(JSONObject jb) {
-            if (jb == null)
+            if (jb == null || jb.isEmpty())
                 return Status.NOT_FOUND;
             
             JSONObject javatars = jb.getJSONObject("avatars");
@@ -224,6 +215,8 @@ public class DoubanSearchResult {
     
     
     public int parseJson(String jsonString) {
+        jsonString = jsonString.replace("\\/\\/", "//");
+        jsonString = jsonString.replace("\\/", "/");
         Log.d(TAG, "parseJson : "  + jsonString);
         
         JSONObject jb = null;
@@ -243,7 +236,7 @@ public class DoubanSearchResult {
             return Status.NOT_FOUND;
         
         JSONArray jaSubject = jb.getJSONArray("subjects");
-        if (jaSubject == null) {
+        if (jaSubject == null || jaSubject.isEmpty()) {
             return Status.NOT_FOUND;
         }
         
