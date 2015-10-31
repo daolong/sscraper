@@ -6,6 +6,8 @@ import org.sscraper.Response;
 import org.sscraper.ScraperProcess;
 import org.sscraper.Status;
 import org.sscraper.database.DatabaseHelper;
+import org.sscraper.database.mysql.DatabaseManager;
+import org.sscraper.database.mysql.MysqlHelper;
 import org.sscraper.model.MovieInfo;
 import org.sscraper.utils.AppConstants;
 import org.sscraper.utils.Log;
@@ -117,7 +119,7 @@ class ServerHandler implements IHandler {
         }
         
         if (paramMap.get("query") != null) {
-            return new ScraperProcess(paramMap.get("query"), paramMap.get("year")).findMovie();
+            return new ScraperProcess().findMovie4Server(paramMap.get("query"), paramMap.get("year"));
         }
         
         
@@ -145,12 +147,12 @@ public class Launcher {
     }
     
     private static void testDatabase() {
-        DatabaseHelper helper = new DatabaseHelper();        
-        MovieInfo movie = helper.queryMovieByOriginalTitle("xialuotefannao");
+        DatabaseHelper helper = new MysqlHelper();        
+        MovieInfo movie = helper.queryMovieByOriginalTitle("xialuotefannao", null);
     }
     
     private static void testProcess() {
-        String response = new ScraperProcess("%E5%A4%8F%E6%B4%9B%E7%89%B9%E7%83%A6%E6%81%BC", "2015").findMovie();
+        String response = new ScraperProcess().findMovie4Server("%E5%A4%8F%E6%B4%9B%E7%89%B9%E7%83%A6%E6%81%BC", "2015");
         Log.d(TAG, "get response : " + response);
     }
 }

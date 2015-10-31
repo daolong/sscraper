@@ -16,5 +16,6 @@
 	<classpathentry kind="lib" path="libs/mysql-connector-java-5.1.37-bin.jar"/>
 	<classpathentry kind="lib" path="libs/commons-dbcp2-2.1.1.jar"/>
 	<classpathentry kind="lib" path="libs/commons-pool2-2.4.2.jar"/>
+	<classpathentry kind="lib" path="libs/jsoup-1.8.3.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

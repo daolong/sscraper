@@ -5,12 +5,11 @@
 package org.sscraper;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
-import org.sscraper.utils.Log;
 import org.sscraper.database.DatabaseHelper;
+import org.sscraper.database.android.AndroidHelper;
+import org.sscraper.database.mysql.MysqlHelper;
 import org.sscraper.model.MovieInfo;
 import org.sscraper.network.HttpUtils;
 import org.sscraper.scraper.*;
@@ -19,13 +18,9 @@ public class ScraperProcess {
     static final String TAG = "Scraper.Process";
 
     private List<ScraperBase> mScrapers;
-    private String query;
-    private String year;
+    DatabaseHelper helper;
     
-    public ScraperProcess(String query, String year) {
-        this.query = query;
-        this.year = year;
-        
+    public ScraperProcess() {
         registerScrpaer(new DoubanScraper());
         registerScrpaer((ScraperBase)new TmdbScraper());
         //registerScrpaer(new M1905Scraper());
@@ -39,28 +34,38 @@ public class ScraperProcess {
         mScrapers.add(scraper);
     }
     
-    public String findMovie() {
-       String queryUtf8 = HttpUtils.decodeHttpParam(query, "UTF-8"); 
-       // TODO guess the movie title
-       
+    
+    public MovieInfo queryMovie(String title, String year) {
+        String queryUtf8 = HttpUtils.decodeHttpParam(title, "UTF-8"); 
+        // TODO guess the movie title
         
-       // query from data base first
-       DatabaseHelper helper = new DatabaseHelper();
-       MovieInfo movie = helper.queryMovieByOriginalTitle(queryUtf8);
-       
-       if (movie == null) {     
-           // not found in data base, scraper from Internet
-           for (int i = 0; i < mScrapers.size(); i++) {
-               movie = mScrapers.get(i).findMovie(query, year);
-               if (movie != null) {
-                   movie.setOriginalSearchTitle(queryUtf8);
-                   // add to data base
-                   helper.insertMovie(movie);
-                   break;
-               }
-           }
-       } 
-       
+        // query from data base first
+        MovieInfo movie = helper.queryMovieByOriginalTitle(queryUtf8, year);
+        
+        if (movie == null) {     
+            // not found in data base, scraper from Internet
+            for (int i = 0; i < mScrapers.size(); i++) {
+                movie = mScrapers.get(i).findMovie(title, year);
+                if (movie != null) {
+                    movie.setOriginalSearchTitle(queryUtf8);
+                    // add to data base
+                    helper.insertMovie(movie);
+                    break;
+                }
+            }
+        }
+        
+        return movie;
+    }
+    
+    public MovieInfo findMovie4Local(String title, String year) {
+        helper = new AndroidHelper();
+        return queryMovie(title, year);
+    }
+    
+    public String findMovie4Server(String title, String year) {
+       helper = new MysqlHelper();
+       MovieInfo movie = queryMovie(title, year);
        if (movie != null) {
            Response res = new Response(Status.OK);
            res.addMovie(movie);
@@ -69,7 +74,6 @@ public class ScraperProcess {
        
        return (new Response(Status.NOT_FOUND)).toJsonString();
        
-    }
-    
+    }   
    
 }
