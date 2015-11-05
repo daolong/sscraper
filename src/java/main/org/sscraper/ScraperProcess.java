@@ -21,8 +21,10 @@ public class ScraperProcess {
     DatabaseHelper helper;
     
     public ScraperProcess() {
-        registerScrpaer(new DoubanScraper());
+    	// We will return the first result of the dounban to user if the name is not match exactly.
+    	// so we put douban after tmdb
         registerScrpaer((ScraperBase)new TmdbScraper());
+        registerScrpaer(new DoubanScraper());
         //registerScrpaer(new M1905Scraper());
     }
     
@@ -58,11 +60,24 @@ public class ScraperProcess {
         return movie;
     }
     
+    /**
+     * Api for scraper movie on Android device.
+     * @param title The tile of movie
+     * @param year  The release year of movie
+     * @return  The movie information if found, null if not found
+     */
     public MovieInfo findMovie4Local(String title, String year) {
         helper = new AndroidHelper();
         return queryMovie(title, year);
     }
-    
+ 
+    /**
+     * Api for scraper movie on server.
+     * @param title The tile of movie
+     * @param year  The release year of movie
+     * @return  Response as json string. 
+     *          The status is 1000 if find the movie, other status means not found
+     */
     public String findMovie4Server(String title, String year) {
        helper = new MysqlHelper();
        MovieInfo movie = queryMovie(title, year);

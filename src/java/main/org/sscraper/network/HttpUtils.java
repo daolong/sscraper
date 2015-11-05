@@ -18,6 +18,7 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.params.CoreConnectionPNames;
 import org.apache.http.protocol.HTTP;
 import org.apache.http.util.EntityUtils;
+import org.sscraper.utils.AppConstants;
 import org.sscraper.utils.Log;
 
 
@@ -25,9 +26,9 @@ public class HttpUtils {
     private final static String TAG = "HttpUtils";
     
     // Connect Timeout
-    public final static int CONNECT_TIMEOUT = 10 * 1000;
+    public final static int CONNECT_TIMEOUT = 40 * 1000;
     // Read Timeout
-    public final static int READ_TIMEOUT = 10 * 1000;
+    public final static int READ_TIMEOUT = 40 * 1000;
     
     private static final String USER_AGENT = "Mozilla/5.0";
     
@@ -45,12 +46,19 @@ public class HttpUtils {
                     readTimeout);
             
             HttpGet httpRequest = new HttpGet(urlString);
+            
+            //set user agent for android, if not douban will return 500 error??
+            if (!AppConstants.SERVER)
+            	httpRequest.setHeader("User-Agent", USER_AGENT);
+            
             HttpResponse response = client.execute(httpRequest);
             HttpEntity entity = response.getEntity();
             int code = response.getStatusLine().getStatusCode();
             if (code == HttpStatus.SC_OK) {
                 String rev = EntityUtils.toString(entity);
                 return rev;
+            } else {
+            	Log.d(TAG, "HttpGet fail code = " + code);
             }
         } catch (Exception e1) {
             Log.printStackTrace(e1);
@@ -91,6 +99,7 @@ public class HttpUtils {
                 return rev;
             }
         } catch (Exception e1) {
+        	Log.printStackTrace(e1);
             e1.printStackTrace();
             urlString = null;
         }

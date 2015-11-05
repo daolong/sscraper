@@ -10,8 +10,6 @@ import org.sscraper.Status;
 import org.sscraper.model.NameItem;
 import org.sscraper.utils.Log;
 
-import com.mysql.fabric.xmlrpc.base.Array;
-
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 
@@ -227,7 +225,7 @@ public class DoubanSearchResult {
         }
        
         if (jb == null)
-            return Status.NOT_FOUND;
+            return Status.FORMAT_ERROR;
         
         count = jb.getInt("count");
         start = jb.getInt("start");

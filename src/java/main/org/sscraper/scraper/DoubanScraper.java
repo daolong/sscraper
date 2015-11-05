@@ -19,8 +19,6 @@ import org.sscraper.network.HttpUtils;
 import org.sscraper.utils.AppConstants;
 import org.sscraper.utils.Log;
 
-import com.sun.org.apache.xml.internal.utils.NSInfo;
-
 
 public class DoubanScraper extends ScraperBase {
     private final static String NAME = "DOUBAN";
@@ -61,6 +59,10 @@ public class DoubanScraper extends ScraperBase {
                     } else {
                         finalSubject = matchNames.get(0); // get the first one
                     }
+                } else {
+                	// FIXME 
+                	// HACK: if not match use the first match one
+                	 finalSubject = subjects.get(0);
                 }
             }
         }

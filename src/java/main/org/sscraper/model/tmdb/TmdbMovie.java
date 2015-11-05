@@ -12,6 +12,7 @@ import org.sscraper.model.NameItem;
 import org.sscraper.model.tmdb.TmdbConfig.Images;
 
 import net.sf.json.JSONArray;
+import net.sf.json.JSONException;
 import net.sf.json.JSONObject;
 
 public class TmdbMovie {
@@ -250,7 +251,12 @@ public class TmdbMovie {
         "production_countries":[{"iso_3166_1":"CN","name":"China"}],"release_date":"2015-09-30","revenue":0,"runtime":104,
         "spoken_languages":[{"iso_639_1":"zh","name":"普通话"}],
         "status":"Released","tagline":"","title":"夏洛特烦恼","video":false,"vote_average":7.5,"vote_count":4}
+        
+        or 
+        {"status_code":34,"status_message":"The resource you requested could not be found."}
         */
+    	
+    	
         
         JSONObject jb = JSONObject.fromObject(jsonString);
         if (jb == null)
@@ -289,7 +295,11 @@ public class TmdbMovie {
         }
         
         imdbId = jb.getString("imdb_id");
-        runtime = jb.getLong("runtime");
+        try {
+        	runtime = jb.getLong("runtime");
+        } catch (JSONException e) {
+        	runtime = -1L;
+        }
         
         return Status.OK;
     }

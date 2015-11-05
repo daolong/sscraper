@@ -152,7 +152,7 @@ public class Launcher {
     }
     
     private static void testProcess() {
-        String response = new ScraperProcess().findMovie4Server("%E5%A4%8F%E6%B4%9B%E7%89%B9%E7%83%A6%E6%81%BC", "2015");
+        String response = new ScraperProcess().findMovie4Server("%E5%85%89%E7%8E%AF4%EF%BC%9A%E8%BF%88%E5%90%91%E9%BB%8E%E6%98%8E", null);
         Log.d(TAG, "get response : " + response);
     }
 }

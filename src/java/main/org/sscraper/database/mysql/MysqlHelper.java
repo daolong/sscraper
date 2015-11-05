@@ -8,6 +8,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.List;
 
 import org.sscraper.database.DatabaseHelper;
 import org.sscraper.model.MovieInfo;
@@ -112,6 +113,7 @@ public class MysqlHelper implements DatabaseHelper {
         Connection conn = null;
         Statement stmt = null;
         ResultSet rs = null;
+        MovieInfo info = null;
         
         String sql = "SELECT * FROM movies WHERE original_search_title like '%" + originalTitle + "%'";
         try {
@@ -123,8 +125,9 @@ public class MysqlHelper implements DatabaseHelper {
             rs = stmt.executeQuery(sql); 
             int i = 0;
             while (rs.next()) {
+                //TODO:  maybe match several movies, check the year also 
                 Log.d(TAG, "hit " + i++);
-                return new MovieInfo(rs);
+                info =  new MovieInfo(rs);
             }
             
             if (i == 0) {
@@ -138,6 +141,48 @@ public class MysqlHelper implements DatabaseHelper {
             }
         }
         
-        return null;
+        return info;
     }
+
+	@Override
+	public List<MovieInfo> queryMovies() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<MovieInfo> queryMoviesByGenre(String genre) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<MovieInfo> queryMoviesByYear(String year) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<MovieInfo> queryMoviesByDirector(String director) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<MovieInfo> queryMoviesByActor(String actor) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<MovieInfo> queryMoviesByCustomer(String sqlString) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void updateMovie(MovieInfo movie) {
+		// TODO Auto-generated method stub
+		
+	}
 }
