@@ -13,6 +13,8 @@ import org.sscraper.database.mysql.MysqlHelper;
 import org.sscraper.model.MovieInfo;
 import org.sscraper.network.HttpUtils;
 import org.sscraper.scraper.*;
+import org.sscraper.utils.AppConstants;
+import org.sscraper.utils.Log;
 
 public class ScraperProcess {
     static final String TAG = "Scraper.Process";
@@ -36,13 +38,38 @@ public class ScraperProcess {
         mScrapers.add(scraper);
     }
     
+    /**
+     * Pre-process string for sql query.
+     * @param str
+     * @return
+     */
+    private String preProcess(String str) {
+    	if (str == null)
+    		return null;
+    	if (AppConstants.SERVER) {
+    		// Mysql "'" ---> "\\\'"
+    		return str.replace("\'", "\\\\\\\'");
+    	} else {
+    		// Sqlite "'" --> "''"
+    		return str.replace("\'", "\'\'");
+    	}
+    }
     
     public MovieInfo queryMovie(String title, String year) {
-        String queryUtf8 = HttpUtils.decodeHttpParam(title, "UTF-8"); 
+        String queryUtf8 = title;
+        if (AppConstants.SERVER)
+        	queryUtf8 = HttpUtils.decodeHttpParam(title, "UTF-8"); 
+        
         // TODO guess the movie title
         
         // query from data base first
-        MovieInfo movie = helper.queryMovieByOriginalTitle(queryUtf8, year);
+        MovieInfo movie = null;
+        try {
+        	movie = helper.queryMovieByOriginalTitle(preProcess(queryUtf8), year);
+        } catch (Exception e) {
+        	Log.w(TAG, "query movie (" + queryUtf8 + ") get exception");
+        	Log.printStackTrace(e);
+        }
         
         if (movie == null) {     
             // not found in data base, scraper from Internet
@@ -51,7 +78,20 @@ public class ScraperProcess {
                 if (movie != null) {
                     movie.setOriginalSearchTitle(queryUtf8);
                     // add to data base
-                    helper.insertMovie(movie);
+                    long id = -1;
+                    try {
+                    	id = helper.insertMovie(movie);
+                    	if (id < 0) {
+                    		Log.w(TAG, "insert (" + queryUtf8 + ") to db fail. Should to check!!!!");
+                    		movie = null;
+                    		continue;
+                    	}
+                    } catch (Exception e) {
+                    	Log.w(TAG, "insert (" + queryUtf8 + ") to db exception. Should to check!!!!");
+                    	Log.printStackTrace(e);
+                    	movie = null;
+                    	continue;                    
+                    }
                     break;
                 }
             }

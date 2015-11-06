@@ -96,9 +96,13 @@ public class MysqlHelper implements DatabaseHelper {
             Log.d(TAG, "execute insert ret = " + ret);
             stmt.close();
             */
+        } catch (SQLException e) {
+        	Log.printStackTrace(e);;
+        	id = -1;
         } catch (Exception e) {
-            Log.printStackTrace(e);
-        } 
+        	Log.printStackTrace(e);
+        	id = -1;
+        }
         finally {            
             if (mDbConnection != null) {
                 mDbConnection.closeResources(conn, pstmt, rs);
@@ -116,6 +120,7 @@ public class MysqlHelper implements DatabaseHelper {
         MovieInfo info = null;
         
         String sql = "SELECT * FROM movies WHERE original_search_title like '%" + originalTitle + "%'";
+        Log.d(TAG, "query sql = " + sql);
         try {
             conn = getMysqlConnection();
             if (conn == null)

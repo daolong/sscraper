@@ -31,7 +31,13 @@ public class DoubanScraper extends ScraperBase {
         String nameUtf8 =  HttpUtils.decodeHttpParam(name, "UTF-8");
         Log.d(NAME, "find movie : " + nameUtf8);
         
-        DoubanSearchResult search = searchMovie(name, year);
+        // encode query string on client point
+		String encodeName = name;
+        if (!AppConstants.SERVER)
+        	encodeName = HttpUtils.encodeHttpParam(name, "UTF-8");        
+        //Log.d(NAME, "encode name : " + encodeName);
+        
+        DoubanSearchResult search = searchMovie(encodeName, year);
         Subject finalSubject = null;
         
         if (search != null) {
@@ -59,11 +65,13 @@ public class DoubanScraper extends ScraperBase {
                     } else {
                         finalSubject = matchNames.get(0); // get the first one
                     }
-                } else {
+                } 
+                
+                if (finalSubject == null) {
                 	// FIXME 
                 	// HACK: if not match use the first match one
-                	 finalSubject = subjects.get(0);
-                }
+                	finalSubject = subjects.get(0);
+            	 }
             }
         }
         
@@ -155,6 +163,8 @@ public class DoubanScraper extends ScraperBase {
             
             info.setSource(NAME);
             return info;            
+        } else {
+        	Log.d(NAME, "No match subject");
         }
         
         return null;

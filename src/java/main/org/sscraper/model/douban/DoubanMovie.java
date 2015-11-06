@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import org.sscraper.Status;
 import org.sscraper.model.NameItem;
 import org.sscraper.utils.Log;
+import org.sscraper.utils.ScraperUtils;
 import org.jsoup.Jsoup;
 import org.jsoup.helper.Validate;
 import org.jsoup.nodes.Document;
@@ -93,7 +94,7 @@ public class DoubanMovie {
                             addGenre(new NameItem(e.text()));
                         } else if (property.equals("v:initialReleaseDate")) {
                             if (LOGD) Log.d(TAG, "hit release date : " + e.text());
-                            release_date = e.text();
+                            release_date = ScraperUtils.findDate(e.text());
                         } else if (property.equals("v:runtime")) {
                             if (LOGD) Log.d(TAG, "hit runtime : " + e.attr("content"));
                             try {

@@ -32,29 +32,19 @@ public class TmdbScraper extends ScraperBase {
         String nameUtf8 =  HttpUtils.decodeHttpParam(name, "UTF-8");
         Log.d(NAME, "find movie : " + nameUtf8);
         
-        SearchResult search = searchMovie(name, year);
+        // encode query string on client point
+		String encodeName = name;
+        if (!AppConstants.SERVER)
+        	encodeName = HttpUtils.encodeHttpParam(name, "UTF-8");        
+        //Log.d(NAME, "encode name : " + encodeName);
+        
+        SearchResult search = searchMovie(encodeName, year);
         if (search == null) {
             Log.d(NAME, "can not find information of <" + nameUtf8 + ">");
             return null;
         }
         
         MovieInfo info = new MovieInfo(nameUtf8);
-        /*
-        byte[] bytes;
-        try {
-            bytes = search.getTitle().getBytes();
-            for (int i = 0 ; i < bytes.length; i++) {
-                Log.d(NAME, String.format("title byte[%d] : 0x%x", i, bytes[i]));
-            }
-            
-            String newTitel = new String(bytes, "iso8859-1");
-            bytes = newTitel.getBytes("iso8859-1");
-            for (int i = 0 ; i < bytes.length; i++) {
-                Log.d(NAME, String.format("new title byte[%d] : 0x%x", i, bytes[i]));
-            }
-            
-        } catch (Exception e) {}
-        */
         
         info.setTitle(search.getTitle());
         info.setOtherTitle(search.getOriginalTitle()); //别名

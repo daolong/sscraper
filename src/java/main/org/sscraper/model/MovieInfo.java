@@ -31,7 +31,9 @@ public class MovieInfo {
     
     private String releaseDate;
     private Long duration;
-    private String language;   // original language
+    // origianl means language, now it means coutry 
+    // it should look like this :  丹麦 / 西班牙 / 阿根廷 / 德国 / 荷兰 / 意大利 / 美国 / 英国 / 法国 / 瑞典 / 芬兰 / 冰岛 / 挪威
+    private String language;   
     private String overView;
     
     private Double voteAverage;
@@ -286,7 +288,7 @@ public class MovieInfo {
                 "other_title VARCHAR(512), " + 
                 "release_date VARCHAR(32), " + 
                 "duration BIGINT, " +
-                "language VARCHAR(10), " + 
+                "language VARCHAR(128), " + 
                 "overview VARCHAR(1024), " + 
                 "vote_average DOUBLE, " + 
                 "vote_count   BIGINT, " +
@@ -312,7 +314,7 @@ public class MovieInfo {
                  "other_title VARCHAR(512), " + 
                  "release_date VARCHAR(32), " + 
                  "duration INTEGER, " +
-                 "language VARCHAR(10), " + 
+                 "language VARCHAR(128), " + 
                  "overview VARCHAR(1024), " + 
                  "vote_average DOUBLE, " + 
                  "vote_count INTEGER, " +
@@ -341,9 +343,22 @@ public class MovieInfo {
         return sql;
     }
     
+    /**
+     * Pre-process string for insert to database
+     * Note that : Mysql is different from Sqlite
+     * @param str
+     * @return
+     */
     private String preprocess(String str) {
-    	if (str != null)
-    		return str.replace("\'", "\\\'");
+    	if (str != null) {
+    		if (AppConstants.SERVER) {
+    			// Mysql "'" --> "\'"
+    			return str.replace("\'", "\\\'");
+    		} else {
+    			// Sqlite "'" -->"''"
+    			return str.replace("\'", "\'\'");
+    		}
+    	}
     	return null;
     }
     

@@ -6,6 +6,7 @@ package org.sscraper.model.tmdb;
 import org.sscraper.Status;
 import org.sscraper.model.SearchResult;
 import org.sscraper.utils.Log;
+import org.sscraper.utils.ScraperUtils;
 
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
@@ -40,7 +41,8 @@ public class TmdbSearchResult extends SearchResult {
         originalLanguage = ja.getJSONObject(0).getString("original_language");
         originalTitle = ja.getJSONObject(0).getString("original_title");
         overView = ja.getJSONObject(0).getString("overview");
-        releaseDate = ja.getJSONObject(0).getString("release_date");
+        String date = ja.getJSONObject(0).getString("release_date");
+        releaseDate = ScraperUtils.findDate(date);
         posterPath = ja.getJSONObject(0).getString("poster_path");
         backdropPath = ja.getJSONObject(0).getString("backdrop_path");
         voteAverage = ja.getJSONObject(0).getDouble("vote_average");
