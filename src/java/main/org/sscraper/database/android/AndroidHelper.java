@@ -83,6 +83,27 @@ public class AndroidHelper implements DatabaseHelper {
 		return movies;
 	}
 
+    public MovieInfo queryMovieById(long id) {
+    	if (id < 0) {
+    		return null;
+    	}
+    	
+		MovieInfo movies = null;
+        if (dbHelper != null) {
+            SQLiteDatabase db = dbHelper.getReadableDatabase();
+            String sql = "SELECT * FROM movies WHERE id=" + id;
+            Cursor cr = db.rawQuery(sql, null);
+            if (cr != null) {
+                if (cr.moveToFirst()) {
+                	movies = new MovieInfo(cr);                	
+                }
+                cr.close();
+            }
+        }        
+        
+		return movies;
+    }
+    
 	@Override
 	public List<MovieInfo> queryMoviesByGenre(String genre) {
 		List<MovieInfo> movies = null;

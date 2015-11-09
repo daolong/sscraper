@@ -34,6 +34,12 @@ public interface DatabaseHelper {
      */
     public List<MovieInfo> queryMovies();
     
+    /**
+     * Query movie by zmdb id
+     * @param id The id of the movie record in data base
+     * @return The movie information if found, null if not found
+     */
+    public MovieInfo queryMovieById(long id);
     
     /**
      * Query movies by genre (类型)

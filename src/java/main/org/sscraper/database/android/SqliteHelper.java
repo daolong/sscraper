@@ -23,6 +23,11 @@ public class SqliteHelper extends SQLiteOpenHelper {
         super(context, name, factory, version);
     }
     
+    /**
+     * Create SQLiteOpenHelper instance. This should be called before operate the db
+     * @param context Tha Application context
+     * @return
+     */
     public static SqliteHelper createHelper(Context context) {
         if (sInstance == null) {
             sInstance = new SqliteHelper(context, DB_NAME, null, 1);

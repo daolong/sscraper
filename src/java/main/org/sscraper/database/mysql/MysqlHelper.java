@@ -156,6 +156,12 @@ public class MysqlHelper implements DatabaseHelper {
 	}
 
 	@Override
+	public MovieInfo queryMovieById(long id) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	
+	@Override
 	public List<MovieInfo> queryMoviesByGenre(String genre) {
 		// TODO Auto-generated method stub
 		return null;

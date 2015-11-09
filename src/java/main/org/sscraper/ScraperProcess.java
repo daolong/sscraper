@@ -56,6 +56,10 @@ public class ScraperProcess {
     }
     
     public MovieInfo queryMovie(String title, String year) {
+    	if (title == null) {
+    		return null;
+    	}
+    	
         String queryUtf8 = title;
         if (AppConstants.SERVER)
         	queryUtf8 = HttpUtils.decodeHttpParam(title, "UTF-8"); 
