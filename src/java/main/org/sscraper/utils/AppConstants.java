@@ -6,7 +6,7 @@ package org.sscraper.utils;
 public class AppConstants {
 
     // Application Version 
-    public final static String VERSION = "1.0.1";
+    public final static String VERSION = "1.0.2";
     
     public final static boolean SERVER = true;
     
