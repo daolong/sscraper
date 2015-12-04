@@ -9,7 +9,7 @@ public class AppConstants {
     public final static String VERSION = "1.0.0";
     
     // the movie data base 
-    public final static String TMDB_API_KEY = "57983e31fb435df4df77afb854740ea9";
+    public final static String TMDB_API_KEY = "";
     public final static String TMDB_SEARCH_URL = "http://api.tmdb.org/3/search/movie?";
     public final static String TMDB_CONFIG_URL = "http://api.tmdb.org/3/configuration?";
     public final static String ZMDB_INFO_URL = "http://api.tmdb.org/3/movie/";
