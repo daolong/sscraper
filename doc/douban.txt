@@ -1,4 +1,4 @@
-
+﻿
 
 1.  http:://api.douban.com/v2/movie/search?q=夏洛特烦恼
 
@@ -46,4 +46,19 @@
 No result:
 
 {"count":20,"start":0,"total":0,"subjects":[],"title":"搜索 \"那所雅兴\" 的结果"}
+
+
+
+============================================
+
+http://api.douban.com/v2/movie/subject/25964071
+
+
+{"rating":{"max":10,"average":7.7,"stars":"40","min":0},"reviews_count":2745,"wish_count":18936,"collect_count":228593,"douban_site":"","year":"2015","images":{"small":"http:\/\/img3.douban.com\/view\/movie_poster_cover\/ipst\/public\/p2264377763.jpg","large":"http:\/\/img3.douban.com\/view\/movie_poster_cover\/lpst\/public\/p2264377763.jpg","medium":"http:\/\/img3.douban.com\/view\/movie_poster_cover\/spst\/public\/p2264377763.jpg"},"alt":"http:\/\/movie.douban.com\/subject\/25964071\/","id":"25964071","mobile_url":"http:\/\/movie.douban.com\/subject\/25964071\/mobile","title":"夏洛特烦恼","do_count":null,"share_url":"http:\/\/m.douban.com\/movie\/subject\/25964071","seasons_count":null,"schedule_url":"","episodes_count":null,"genres":["喜剧","爱情"],"countries":["中国大陆"],"casts":[{"avatars":{"small":"http:\/\/img4.douban.com\/img\/celebrity\/small\/1356510694.28.jpg","large":"http:\/\/img4.douban.com\/img\/celebrity\/large\/1356510694.28.jpg","medium":"http:\/\/img4.douban.com\/img\/celebrity\/medium\/1356510694.28.jpg"},"alt":"http:\/\/movie.douban.com\/celebrity\/1325700\/","id":"1325700","name":"沈腾"},{"avatars":{"small":"http:\/\/img3.douban.com\/img\/celebrity\/small\/1382977107.4.jpg","large":"http:\/\/img3.douban.com\/img\/celebrity\/large\/1382977107.4.jpg","medium":"http:\/\/img3.douban.com\/img\/celebrity\/medium\/1382977107.4.jpg"},"alt":"http:\/\/movie.douban.com\/celebrity\/1319032\/","id":"1319032","name":"马丽"},{"avatars":{"small":"http:\/\/img3.doubanio.com\/img\/celebrity\/small\/mLU53UJJnXMcel_avatar_uploaded1376504617.19.jpg","large":"http:\/\/img3.doubanio.com\/img\/celebrity\/large\/mLU53UJJnXMcel_avatar_uploaded1376504617.19.jpg","medium":"http:\/\/img3.doubanio.com\/img\/celebrity\/medium\/mLU53UJJnXMcel_avatar_uploaded1376504617.19.jpg"},"alt":"http:\/\/movie.douban.com\/celebrity\/1332934\/","id":"1332934","name":"尹正"},{"avatars":{"small":"http:\/\/img3.douban.com\/img\/celebrity\/small\/1437031126.82.jpg","large":"http:\/\/img3.douban.com\/img\/celebrity\/large\/1437031126.82.jpg","medium":"http:\/\/img3.douban.com\/img\/celebrity\/medium\/1437031126.82.jpg"},"alt":"http:\/\/movie.douban.com\/celebrity\/1350408\/","id":"1350408","name":"艾伦"}],"current_season":null,"original_title":"夏洛特烦恼","summary":"在学生时代的初恋秋雅（王智 饰）的婚礼上，毕业后吃软饭靠老婆养的夏洛（沈腾 饰）假充大款，出尽其丑，中间还被老婆马冬梅（马丽 饰）戳穿暴捶。混乱之中，夏洛意外穿越时空，回到了1997年的学生时代的课堂里。他懵懵懂懂，以为是场真实感极强的梦，于是痛揍王老师，强吻秋雅，还尝试跳楼让自己醒来。当受伤的他从病床上苏醒时，他意识到自己真的穿越了时空。既然有机会重新来过，那不如好好折腾一回。他勇敢追求秋雅、奚落优等生袁华（尹正 饰）、拒绝马冬梅的死缠烂打。后来夏洛凭借“创作”朴树、窦唯等人的成名曲而进入娱乐圈。\n他的人生发生翻天覆地的巨变，但是内心某个地方却越来越感到空虚……©豆瓣","subtype":"movie","directors":[{"avatars":{"small":"http:\/\/img4.douban.com\/img\/celebrity\/small\/1437030925.47.jpg","large":"http:\/\/img4.douban.com\/img\/celebrity\/large\/1437030925.47.jpg","medium":"http:\/\/img4.douban.com\/img\/celebrity\/medium\/1437030925.47.jpg"},"alt":"http:\/\/movie.douban.com\/celebrity\/1350410\/","id":"1350410","name":"闫非"},{"avatars":{"small":"http:\/\/img3.douban.com\/img\/celebrity\/small\/1437031053.5.jpg","large":"http:\/\/img3.douban.com\/img\/celebrity\/large\/1437031053.5.jpg","medium":"http:\/\/img3.douban.com\/img\/celebrity\/medium\/1437031053.5.jpg"},"alt":"http:\/\/movie.douban.com\/celebrity\/1350409\/","id":"1350409","name":"彭大魔"}],"comments_count":101503,"ratings_count":209223,"aka":["Goodbye Mr. Loser"]}
+
+
+===========================================================
+http://api.douban.com/v2/movie/subject/25964071/photos 
+
+{"msg":"need_permission","code":1000,"request":"GET \/v2\/movie\/subject\/25964071\/photos"}
 

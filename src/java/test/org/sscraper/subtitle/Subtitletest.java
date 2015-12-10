@@ -43,6 +43,8 @@ public class Subtitletest {
 				} else {
 					Log.d(TAG, "No result");
 				}
+				
+				api.logout(token);
 			}
 		} catch (OpenSubtitlesException e) {
 			e.printStackTrace();

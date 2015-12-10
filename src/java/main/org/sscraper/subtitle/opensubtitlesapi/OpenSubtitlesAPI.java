@@ -129,8 +129,8 @@ public class OpenSubtitlesAPI {
       searches.add(search);
       */
       search = new HashMap<String, Object>();
-      search.put("sublanguageid", sb.toString());
-      search.put("query", "星球大战");
+      //search.put("sublanguageid", sb.toString());
+      search.put("query", "The Phantom Menace");
       searches.add(search);
       
       params.add(token);
