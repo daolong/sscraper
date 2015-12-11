@@ -163,6 +163,8 @@ public class HttpUtils {
             return newParam;
         } catch (UnsupportedEncodingException e) {
             return param;
+        } catch (IllegalArgumentException e) {
+        	return param;
         }
     }
     

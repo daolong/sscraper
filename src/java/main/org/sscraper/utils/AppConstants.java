@@ -33,5 +33,7 @@ public class AppConstants {
     public final static int SHOOTER_COUNT = 10; // how many results return when search
     public final static int SHOOTER_START = 0;  // page start position of search results
     
-    
+    public final static String QQMEDIA_SEARCH_URL = "http://s.video.qq.com/subtitle_search?";
+    public final static String QQMEDIA_SEARCH_PREQID = "ytpd-BPIhGhovYGJlEjbuSqTl9cJUkC1jKoB7m8SwrukZKz26Xzrqw";
+    public final static String QQMEDIA_SEARCH_PLATFORM = "pc";
 }

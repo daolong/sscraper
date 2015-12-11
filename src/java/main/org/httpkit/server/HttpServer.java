@@ -131,6 +131,7 @@ public class HttpServer implements Runnable {
     }
 
     private void decodeWs(WsAtta atta, SelectionKey key) {
+    	/*
         try {
             do {
                 Frame frame = atta.decoder.decode(buffer);
@@ -154,6 +155,7 @@ public class HttpServer implements Runnable {
             System.err.printf("%s [%s] WARN - %s\n", new Date(), THREAD_NAME, e.getMessage());
             closeKey(key, CLOSE_MESG_BIG); // TODO more specific error
         }
+        */
     }
 
     private void doRead(final SelectionKey key) {

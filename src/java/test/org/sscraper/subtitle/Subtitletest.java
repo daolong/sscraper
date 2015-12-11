@@ -26,7 +26,8 @@ public class Subtitletest {
     	*/
     	//String filename = args[0];
     	
-    	testShooter();
+    	//testShooter();
+    	testQqMedia();
     } 
     
     
@@ -61,6 +62,16 @@ public class Subtitletest {
     
     private static void testShooter() {
     	List<SubTitleInfo> subs = SubTitleProcess.findSubTitle("阿凡达", "zh");
+    	if (subs != null && subs.size() > 0) {
+    		for (int i = 0; i < subs.size(); i++) {
+    			Log.d(TAG, "Subtitle : " + subs.get(i).toJsonString());
+    			HttpUtils.download2Location(subs.get(i).getUrl(), "E:\\temp\\subtitles\\" + subs.get(i).getFilename());
+    		}
+    	}
+    }
+    
+    private static void testQqMedia() {
+    	List<SubTitleInfo> subs = SubTitleProcess.findSubTitle("%E9%98%BF%E5%87%A1%E8%BE%BE", "zh");
     	if (subs != null && subs.size() > 0) {
     		for (int i = 0; i < subs.size(); i++) {
     			Log.d(TAG, "Subtitle : " + subs.get(i).toJsonString());
