@@ -119,7 +119,7 @@ public class ScraperProcess {
      * Api for scraper movie on server.
      * @param title The tile of movie
      * @param year  The release year of movie
-     * @return  Response as json string. 
+     * @return  Response as json string. </p>
      *          The status is 1000 if find the movie, other status means not found
      */
     public String findMovie4Server(String title, String year) {

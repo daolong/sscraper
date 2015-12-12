@@ -25,7 +25,8 @@ public enum LANGUAGE {
   ENG("eng"),
   ITA("ita"),
   FRA("fra"),
-  ZHO("zho");
+  ZHO("zho"),
+  ZH("zh");	
 	
   private String language;
 

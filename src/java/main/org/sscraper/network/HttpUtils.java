@@ -3,7 +3,12 @@
  */
 package org.sscraper.network;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.util.List;
@@ -25,8 +30,11 @@ import org.apache.http.params.HttpParams;
 import org.apache.http.params.HttpProtocolParams;
 import org.apache.http.protocol.HTTP;
 import org.apache.http.util.EntityUtils;
+import org.sscraper.Status;
 import org.sscraper.utils.AppConstants;
 import org.sscraper.utils.Log;
+import org.sscraper.utils.Return;
+
 
 
 public class HttpUtils {
@@ -165,5 +173,57 @@ public class HttpUtils {
         } catch (UnsupportedEncodingException e) {
             return param;
         }
+    }
+    
+    public static int download2File(String url, File file) {
+    	HttpURLConnection httpConnection = null;
+		InputStream is = null;
+		FileOutputStream fos = null;
+		int ret = Return.OK;
+		
+		try {
+			Log.d(TAG, "start download (" + url + ")");
+			URL remoteUrl = new URL(url);					
+			httpConnection = (HttpURLConnection) remoteUrl
+					.openConnection();
+			httpConnection.setConnectTimeout(CONNECT_TIMEOUT);
+			httpConnection.setReadTimeout(READ_TIMEOUT);
+			is = httpConnection.getInputStream();
+			fos = new FileOutputStream(file);
+			byte[] buffer = new byte[1024];
+			int len = 0;
+			while ((len = is.read(buffer)) > -1) {
+				fos.write(buffer, 0, len);
+				fos.flush();
+			}
+			Log.d(TAG, "download2File (" + url + ") success!");
+		} catch (Exception e) {
+			Log.d(TAG, "download2File (" + url + ") fail!");
+			e.printStackTrace();
+			ret = Return.NG;
+		} finally {
+			try {
+				if (httpConnection != null) {
+					httpConnection.disconnect();
+				}
+
+				if (is != null) {
+					is.close();
+				}
+
+				if (fos != null) {
+					fos.close();
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		
+		return ret;
+    }
+    
+    public static int download2Location(String url, String location) {
+    	File file = new File(location);
+    	return download2File(url, file);
     }
 }

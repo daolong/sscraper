@@ -1,0 +1,16 @@
+
+
+lang  可以改
+
+1是中文
+
+2是英文
+
+0是双语
+
+黄金眼
+http://s.video.qq.com/subtitle_search?query=%E9%BB%84%E9%87%91%E7%9C%BC&lang=1&preqid=ytpd-BPIhGhovYGJlEjbuSqTl9cJUkC1jKoB7m8SwrukZKz26Xzrqw&platform=pc
+阿凡达
+http://s.video.qq.com/subtitle_search?query=%E9%98%BF%E5%87%A1%E8%BE%BE&lang=2&preqid=ytpd-BPIhGhovYGJlEjbuSqTl9cJUkC1jKoB7m8SwrukZKz26Xzrqw&platform=pc 
+
+

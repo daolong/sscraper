@@ -1,0 +1,44 @@
+
+
+1. search 
+
+http://api.makedie.me/v1/sub/search?token=UyUaWLotvTmRKdCqu9C0GHq56B4xKMRE&q=░в╖▓┤я&cnt=10&pos=0
+
+==>
+{"status":20001,"errmsg":"invalid token"}
+==>
+{"status":0,"sub":{"result":"succeed","action":"search","keyword":"?бш??бф??бы1??|???","subs":{}}}
+
+==>
+{"status":0,"sub":{"result":"succeed","action":"search","keyword":"иж?????ии??",
+"subs":[
+{"native_name":"иж?????ии??","videoname":"Avata 2009 3D BluRay 1080p HSBS DTS 2Audio x264-CHD","revision":0,"subtype":"VobSub","upload_time":"2014-12-06 00:16:02","vote_score":0,"id":458400},
+{"native_name":"иж?????ии??","videoname":"Avatar Extended Collector's Edition 2009 BluRay 1080p DTS x264-CHD","revision":0,"subtype":"VobSub","upload_time":"2014-12-06 00:13:25","vote_score":60,"id":446195},
+{"native_name":"иж?????ии??","videoname":"Avatar Extended Collector's Edition 2009 BluRay 1080p DTS x264-CHD","revision":0,"subtype":"VobSub","upload_time":"2014-12-06 00:13:25","vote_score":0,"id":446197},
+{"native_name":"иж?????ии?? ??бы?????АReMux?бы?","videoname":"Avatar Extended Colectors Edition 2010 3in1 1080p Blu-ray DualAudio DTS-HD MA5 1 AVC-HiS@beAst","revision":0,"subtype":"VobSub","upload_time":"2014-12-06 00:12:10","vote_score":0,"id":439260},
+{"native_name":"иж?????ии?? ??бы?????АReMux?бы?","videoname":"Avatar Extended Colectors Edition 2010 3in1 1080p Blu-ray DualAudio DTS-HD MA5 1 AVC-HiS@beAst","revision":0,"subtype":"VobSub","upload_time":"2014-12-06 00:12:10","vote_score":0,"id":439262},
+{"native_name":"иж?????ии?? ??бы?????АReMux?бы?","videoname":"Avatar Extended Colectors Edition 2010 3in1 1080p Blu-ray DualAudio DTS-HD MA5 1 AVC-HiS@beAst","revision":0,"subtype":"VobSub","upload_time":"2014-12-06 00:12:10","vote_scosure":0,"id":439263},
+{"native_name":"иж?????ии?? ?? иж???б▒?иибк??бы?","videoname":"Avatar Extended Colectors Edition 2010 720p BluRay x264 DTS-WiKi","revision":0,"subtype":"VobSub","upload_time":"2014-12-06 00:10:35","vote_score":0,"id":433852},
+{"native_name":"иж?????ии?? ?? иж???б▒?иибк??бы?","videoname":"Avatar Extended Colectors Edition 2010 720p BluRay x264 DTS-WiKi","revision":0,"subtype":"VobSub","upload_time":"2014-12-06 00:10:35","vote_score":0,"id":433853},
+{"native_name":"иж?????ии???? иж???бы?","videoname":"Avatar EXTENDED (2009) BRRip XviD AC3-SANTi","revision":0,"subtype":"VobSub","upload_time":"2014-12-06 00:10:33","vote_score":0,"id":433578},
+{"native_name":"иж?????ии??","videoname":"Avatar Extended Collector's Edition 2009 BluRay 1080p DTS x264-CHD","revision":0,"subtype":"VobSub","upload_time":"2014-12-06 00:10:30","vote_score":0,"id":433163}]}}
+
+
+
+2. detail 
+
+http://api.makedie.me/v1/sub/detail?token=UyUaWLotvTmRKdCqu9C0GHq56B4xKMRE&id=458400
+
+
+==>
+{"status":0,
+"sub":{"result":"succeed","action":"detail",
+  "subs":[
+    {"filename":"Avata.2009.3D.BluRay.1080p.HSBS.DTS.2Audio.x264-CHD.eng.srt","native_name":"иж?????ии??","size":97933,"id":458400,"filelist":{},"subtype":"VobSub","videoname":"Avata 2009 3D BluRay 1080p HSBS DTS 2Audio x264-CHD","view_count":1940,"upload_time":"2014-12-06 00:16:02","vote_score":0,"url":"http:\/\/file1.makedie.me\/download\/458400\/Avata.2009.3D.BluRay.1080p.HSBS.DTS.2Audio.x264-CHD.eng.srt?api=1&_=1449801591&-=c8351bcbbada89308056cb16e0303419","down_count":1033,"title":"иж?????ии??\/Avata.2009.3D.BluRay.1080p.HSBS.DTS.2Audio.x264-CHD.eng"}
+      ]}
+}
+
+{"status":0,"sub":{"result":"succeed","action":"detail","subs":[{"filename":"Avatar.Extended.Collector's.Edition.2009.BluRay.1080p.DTS.x264-CHD.chs&eng.srt","native_name":"иж?????ии??","size":258861,"id":446195,"filelist":{},"subtype":"VobSub","videoname":"Avatar Extended Collector's Edition 2009 BluRay 1080p DTS x264-CHD","view_count":2604,"upload_time":"2014-12-06 00:13:25","vote_score":60,"url":"http:\/\/file1.makedie.me\/download\/446195\/Avatar.Extended.Collector's.Edition.2009.BluRay.1080p.DTS.x264-CHD.chs&eng.srt?api=1&_=1449803411&-=ae7b5fe8275275bc14c738c1367be3f1","down_count":1701,"title":"иж?????ии??\/Avatar.Extended.Collector's.Edition.2009.BluRay.1080p.DTS.x264-CHD.chs&eng"}]}}
+
+http://file1.makedie.me/download/446195/Avatar.Extended.Collector's.Edition.2009.BluRay.1080p.DTS.x264-CHD.chs&eng.srt?api=1&_=1449803411&-=ae7b5fe8275275bc14c738c1367be3f1
+
