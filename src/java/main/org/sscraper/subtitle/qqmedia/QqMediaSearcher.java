@@ -12,6 +12,7 @@ import nu.xom.*;
 import org.sscraper.network.HttpUtils;
 import org.sscraper.subtitle.SearcherInterface;
 import org.sscraper.subtitle.SubTitleInfo;
+import org.sscraper.subtitle.qqmedia.QqMediaSearchResult.SearchItem;
 import org.sscraper.utils.AppConstants;
 import org.sscraper.utils.Log;
 
@@ -29,7 +30,10 @@ public class QqMediaSearcher implements SearcherInterface {
         	encodeName = HttpUtils.encodeHttpParam(title, "UTF-8");        
         //Log.d(NAME, "encode name : " + encodeName);
         
-        List<QqMediaSearchResult> lists = searchSubTitle(encodeName, language);
+        QqMediaSearchResult result = searchSubTitle(encodeName, language);
+        if (result != null) {
+        	Log.d(NAME, "result = " + result.toJsonString());
+        }
         
 		return null;
 	}
@@ -52,7 +56,7 @@ public class QqMediaSearcher implements SearcherInterface {
 		return -1;
 	}
 
-	private List<QqMediaSearchResult> searchSubTitle(String title, String language) {
+	private QqMediaSearchResult searchSubTitle(String title, String language) {
 		String url = AppConstants.QQMEDIA_SEARCH_URL + "query=" + title + "&lang=1&preqid=" + 
 				AppConstants.QQMEDIA_SEARCH_PREQID + "&platform=" + AppConstants.QQMEDIA_SEARCH_PLATFORM;
 		
@@ -102,7 +106,33 @@ public class QqMediaSearcher implements SearcherInterface {
 	     }
 	     
 	     Log.d(NAME, "list count = " + lists.size());
+	     QqMediaSearchResult result = new QqMediaSearchResult();
+	     for (int i = 0; i < lists.size(); i++) {
+	    	 SearchItem item = new SearchItem();
+	    	 Element e = lists.get(i);
+	    	 Element ag = e.getFirstChildElement("AG");
+	    	 if (ag != null) item.parseAg(ag.getValue());
+	    	 Element aw = e.getFirstChildElement("AW");
+	    	 if (aw != null) item.setRarUrl(aw.getValue());
+	    	 Element tf = e.getFirstChildElement("TF");
+	    	 if (tf != null) item.setTitle(tf.getValue());
+	    	 Element at = e.getFirstChildElement("AT");
+	    	 if (at != null) item.setUploadTime(at.getValue());
+	    	 Element id = e.getFirstChildElement("ID");
+	    	 if (id != null) {
+	    		 long value = -1;
+	    		 try {
+	    			 value = Long.parseLong(id.getValue());
+	    		 } catch(Exception ex) {}
+	    		 item.setId(value); 
+	    	 }
+	    	 
+	    	 Element ti = e.getFirstChildElement("TI");
+	    	 if (ti != null) item.setRarFilename(ti.getValue());
+	    	 
+	    	 result.addSearchItem(item);
+	     }
 	     
-		return null;
+		return result;
 	}
 }
